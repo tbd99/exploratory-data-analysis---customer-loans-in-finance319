@@ -47,16 +47,17 @@ class RDSDatabaseConnector():
        df = pd.read_sql_table(table_name, engine)
        return df
 
-credentials_dict = load_yaml('credentials.yaml') 
-table_name = 'loan_payments'  
-file_name = 'loan_payments.csv'
+credentials_filename = 'credentials.yaml' # data type str
+table_name = 'loan_payments'  # data type str
+csv_file_name = 'loan_payments.csv' # data type str
 
 if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
+   credentials_dict = load_yaml(credentials_filename) 
    my_instance = RDSDatabaseConnector(credentials_dict) # initialises an instance of the RDSDatabaseConnector class 
    my_engine = my_instance.SQLAlchemy_initialiser() # calls the SQLAlchemy_initialiser method to initialise an engine
    conn = my_engine.connect() # intialises connection to RDS database
    loan_payments_df = my_instance.extract_to_pandas(my_engine, table_name) # calls the extract_to_pandas method to load RDS data to pd DataFrame
-   save_to_csv(loan_payments_df,file_name) # calls the save_to_csv funciton to save dataframe data to local machine
+   save_to_csv(loan_payments_df,csv_file_name) # calls the save_to_csv funciton to save dataframe data to local machine
    conn.close() # closes connection to RDS database
 
 
