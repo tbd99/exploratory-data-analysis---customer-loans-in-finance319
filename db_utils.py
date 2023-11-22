@@ -1,6 +1,7 @@
 import pandas as pd
 import yaml
 from sqlalchemy import create_engine 
+from sqlalchemy import inspect
 
 
 def load_yaml(myfile): 
@@ -20,21 +21,28 @@ class RDSDatabaseConnector():
     
     def SQLAlchemy_initialiser(self):
        DATABASE_TYPE = 'postgresql'
-       DBAPI = 'psycopg2'
+       #DBAPI = 'psycopg2'
        HOST = self.credentials['RDS_HOST']
        USER = self.credentials['RDS_USER']
        PASSWORD = self.credentials['RDS_PASSWORD']
        DATABASE = self.credentials['RDS_DATABASE']
        PORT = self.credentials['RDS_PORT']
-       engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")  
-       engine.connect()
+       #engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}") 
+       engine = create_engine(f"{DATABASE_TYPE}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")   
+       
        #engine.close()
        return engine
     
-    def extract_to_pandas(self,engine):
-       df = pd.read_sql_table(self.credentials['RDS_DATABASE'], engine)
+    def extract_to_pandas(self,engine, table_name):
+       df = pd.read_sql_table(table_name, engine)
        return df
     
 my_test = RDSDatabaseConnector(credentials_dict)
+
 my_engine = my_test.SQLAlchemy_initialiser()
-loan_payments = my_test.extract_to_pandas(my_engine)
+my_engine.connect() 
+
+table_name = 'loan_payments'
+loan_payments_df = my_test.extract_to_pandas(my_engine, table_name)
+#my_engine.close()
+loan_payments_df.info()
