@@ -17,7 +17,6 @@ class RDSDatabaseConnector():
     '''
     def __init__(self, credentials_dict):
        self.credentials = credentials_dict
-       return self.credentials 
     
     def SQLAlchemy_initialiser(self):
        DATABASE_TYPE = 'postgresql'
@@ -28,4 +27,8 @@ class RDSDatabaseConnector():
        DATABASE = self.credentials['RDS_DATABASE']
        PORT = self.credentials['RDS_PORT']
        engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")  
+       engine.connect()
        return engine
+    
+my_test = RDSDatabaseConnector(credentials_dict)
+my_test.SQLAlchemy_initialiser()
