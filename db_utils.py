@@ -1,4 +1,6 @@
+import pandas as pd
 import yaml
+from sqlalchemy import create_engine 
 
 
 def load_yaml(myfile): 
@@ -13,3 +15,17 @@ class RDSDatabaseConnector():
     '''
     This class contains the methods used to extract data from the RDS
     '''
+    def __init__(self, credentials_dict):
+       self.credentials = credentials_dict
+       return self.credentials 
+    
+    def SQLAlchemy_initialiser(self):
+       DATABASE_TYPE = 'postgresql'
+       DBAPI = 'psycopg2'
+       HOST = self.credentials['RDS_HOST']
+       USER = self.credentials['RDS_USER']
+       PASSWORD = self.credentials['RDS_PASSWORD']
+       DATABASE = self.credentials['RDS_DATABASE']
+       PORT = self.credentials['RDS_PORT']
+       engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")  
+       return engine
