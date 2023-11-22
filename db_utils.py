@@ -9,9 +9,9 @@ def load_yaml(myfile):
       yaml_dict = yaml.safe_load(f)
    return yaml_dict
 
-credentials_dict = load_yaml('credentials.yaml')
-
-
+def save_to_csv(my_df,filename):
+   my_df.to_csv(filename)
+   
 class RDSDatabaseConnector():
     '''
     This class contains the methods used to extract data from the RDS
@@ -27,22 +27,22 @@ class RDSDatabaseConnector():
        PASSWORD = self.credentials['RDS_PASSWORD']
        DATABASE = self.credentials['RDS_DATABASE']
        PORT = self.credentials['RDS_PORT']
-       #engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}") 
        engine = create_engine(f"{DATABASE_TYPE}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")   
-       
-       #engine.close()
        return engine
     
     def extract_to_pandas(self,engine, table_name):
        df = pd.read_sql_table(table_name, engine)
        return df
-    
+
+credentials_dict = load_yaml('credentials.yaml') 
+table_name = 'loan_payments'  
+file_name = 'loan_payments_csv'
+
 my_test = RDSDatabaseConnector(credentials_dict)
-
 my_engine = my_test.SQLAlchemy_initialiser()
-my_engine.connect() 
-
-table_name = 'loan_payments'
+conn = my_engine.connect() 
 loan_payments_df = my_test.extract_to_pandas(my_engine, table_name)
-#my_engine.close()
+save_to_csv(loan_payments_df,file_name)
+conn.close()
 loan_payments_df.info()
+
