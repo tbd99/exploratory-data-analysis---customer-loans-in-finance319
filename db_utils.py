@@ -28,7 +28,13 @@ class RDSDatabaseConnector():
        PORT = self.credentials['RDS_PORT']
        engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")  
        engine.connect()
+       #engine.close()
        return engine
     
+    def extract_to_pandas(self,engine):
+       df = pd.read_sql_table(self.credentials['RDS_DATABASE'], engine)
+       return df
+    
 my_test = RDSDatabaseConnector(credentials_dict)
-my_test.SQLAlchemy_initialiser()
+my_engine = my_test.SQLAlchemy_initialiser()
+loan_payments = my_test.extract_to_pandas(my_engine)
