@@ -19,6 +19,20 @@ class DataFrameInfo():
         return 
     
     def get_datatypes(self):
-        return self.dataframe.dtypes()
+        dtypes = self.dataframe.dtypes
+        return dtypes
+    
+    def get_uniquevals(self,column):
+        unique_vals = self.dataframe[column].unique()
+        return unique_vals
+    
+
+my_instance = DataFrameInfo(loan_payments_df)
+dtypes = my_instance.get_datatypes()   
+u_vals = my_instance.get_uniquevals('home_ownership')
+print(u_vals)
+
+
+
 
        
