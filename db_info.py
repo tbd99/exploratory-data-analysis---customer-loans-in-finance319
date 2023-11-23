@@ -46,7 +46,9 @@ class DataFrameInfo():
         print(self.dataframe.shape)
         return 
     
-    #function to calcualte mode of column
+    def null_percentage(self,column):
+        null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
+        return null_pc
     #function to generate a count/percentage count of null values of a column
     #function to count frequency of each option in categorical data 
 
@@ -70,6 +72,9 @@ my_instance.print_shape()
 mode = my_instance.get_mode('purpose')
 print(mode)
 
+
+nulls = my_instance.null_percentage('mths_since_last_record')
+print(nulls)
 
 
 
