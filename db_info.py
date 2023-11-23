@@ -38,8 +38,10 @@ class DataFrameInfo():
        mean = np.mean(self.dataframe[column])
        return mean
     
-    #
-    #function to calculate mean of column
+    def print_shape(self):
+        print(self.dataframe.shape)
+        return 
+    
     #function to calcualte mode of column
     #function to print dataframe shape 
     #function to generate a count/percentage count of null values of a column
@@ -59,6 +61,8 @@ print(sd)
 
 mean = my_instance.get_mean('total_payment')
 print(mean)
+
+my_instance.print_shape()
 
 
 
