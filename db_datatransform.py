@@ -40,6 +40,14 @@ class DataTransform():
         '''
         self.dataframe[column_name] = (self.dataframe[column_name]).astype('string')
         return self.dataframe
+    
+    def obj_to_cat(self,column_name):
+        '''
+        This function converts obj datatype to categorical
+        Takes the column name as an argument, passed as a string
+        '''
+        self.dataframe[column_name] = (self.dataframe[column_name]).astype('category')
+        return self.dataframe
 
 
 my_instance = DataTransform(loan_payments_df) #initialise instance of class
@@ -47,7 +55,7 @@ my_instance = DataTransform(loan_payments_df) #initialise instance of class
 col_to_convert_to_datetime = ['issue_date', 'earliest_credit_line', 'last_payment_date','next_payment_date', 'last_credit_pull_date'] # list of strings specifying columns to be converted
 col_to_convert_to_float = ['term','employment_length']
 col_to_convert_to_str = ['grade', 'sub_grade']
-col_to_convert_to_categorical = ['woooo']
+col_to_convert_to_categorical = ['home_ownership','verification_status','loan_status','payment_plan','purpose','application_type']
 
 for i in range(0,len(col_to_convert_to_datetime)): #loops over list of column names
     datetime_format = '%b-%Y'
@@ -58,6 +66,9 @@ for i in range(0,len(col_to_convert_to_float)): #loops over list of column names
 
 for i in range(0,len(col_to_convert_to_str)): #loops over list of column names
     my_instance.obj_to_str(col_to_convert_to_str[i])
+
+for i in range(0,len(col_to_convert_to_categorical)): #loops over list of column names
+    my_instance.obj_to_str(col_to_convert_to_categorical[i])
 
 
 loan_payments_df.info()
