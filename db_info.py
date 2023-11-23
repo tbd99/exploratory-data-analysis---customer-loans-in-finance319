@@ -1,4 +1,4 @@
-
+import numpy as np
 import pandas as pd
 from datetime import datetime 
 
@@ -29,8 +29,16 @@ class DataFrameInfo():
     def get_median(self,column):
        median = self.dataframe[column].median()
        return median
-    #function to calculate median of column
-    #function to calculate stdev of column
+    
+    def get_stdev(self,column):
+       stdev = self.dataframe[column].std()
+       return stdev
+    
+    def get_mean(self,column):
+       mean = np.mean(self.dataframe[column])
+       return mean
+    
+    #
     #function to calculate mean of column
     #function to calcualte mode of column
     #function to print dataframe shape 
@@ -45,6 +53,13 @@ u_vals = my_instance.get_uniquevals('home_ownership')
 print(u_vals)
 mode = my_instance.get_median('total_payment')
 print(mode)
+
+sd = my_instance.get_stdev('total_payment')
+print(sd)
+
+mean = my_instance.get_mean('total_payment')
+print(mean)
+
 
 
 
