@@ -38,12 +38,15 @@ class DataFrameInfo():
        mean = np.mean(self.dataframe[column])
        return mean
     
+    def get_mode(self,column):
+       mode = self.dataframe[column].mode()
+       return mode
+    
     def print_shape(self):
         print(self.dataframe.shape)
         return 
     
     #function to calcualte mode of column
-    #function to print dataframe shape 
     #function to generate a count/percentage count of null values of a column
     #function to count frequency of each option in categorical data 
 
@@ -63,6 +66,9 @@ mean = my_instance.get_mean('total_payment')
 print(mean)
 
 my_instance.print_shape()
+
+mode = my_instance.get_mode('purpose')
+print(mode)
 
 
 
