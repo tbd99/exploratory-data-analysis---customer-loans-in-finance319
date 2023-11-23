@@ -49,11 +49,11 @@ class DataFrameInfo():
     def null_percentage(self,column):
         null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
         return null_pc
-    #function to generate a count/percentage count of null values of a column
-    #function to count frequency of each option in categorical data 
-
-    
-
+   
+    def get_range(self,column):
+        range = self.dataframe[column].max() - self.dataframe[column].min()
+        return range
+  
 my_instance = DataFrameInfo(loan_payments_df)
 dtypes = my_instance.get_datatypes()   
 u_vals = my_instance.get_uniquevals('home_ownership')
@@ -75,6 +75,9 @@ print(mode)
 
 nulls = my_instance.null_percentage('mths_since_last_record')
 print(nulls)
+
+range = my_instance.get_range('total_payment')
+print(range)
 
 
 
