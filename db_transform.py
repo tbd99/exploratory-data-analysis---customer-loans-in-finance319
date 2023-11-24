@@ -45,6 +45,21 @@ class DataFrameTransform():
       self.dataframe = self.dataframe.dropna(subset=[column])
       return self.dataframe
    
+   def impute_na_with_mean(self,column):
+      '''
+      This function replaces null values in a specified column with the mean of the column
+      '''
+      self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
+      return self.dataframe
+   
+   def impute_na_with_mode(self,column):
+      '''
+      This function replaces null values in a specified column with the mode of the column
+      '''
+      self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].mode())
+      return self.dataframe
+
+   
    
 
 if __name__ == "__main__":
@@ -128,8 +143,14 @@ if __name__ == "__main__":
     
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
+
+   plotter_instance = Plotter(loan_payments_df_copy) 
+
+   #for i in range(0, len(columns_to_impute)):
+   #plotter_instance.plot_hist('employment_length')
+    
        
-   
+   print(loan_payments_df_copy['employment_length'].head(20))
 
 
    
