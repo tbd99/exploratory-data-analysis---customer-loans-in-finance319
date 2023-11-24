@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime 
 
+
 def read_csv(filename):
     df_csv = pd.read_csv(filename)
     return df_csv 
@@ -10,7 +11,6 @@ def save_to_csv(my_df,filename):
    This function saves a dataframe to a csv file
    '''
    my_df.to_csv(filename, index=False) # add index=False so index column is not saved to csv 
-
 
 class DataTransform():
     '''
@@ -53,11 +53,6 @@ class DataTransform():
         self.dataframe[column_name] = (self.dataframe[column_name]).astype('category')
         return self.dataframe
 
-
-
-
-
-
 if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
    
    filename = 'loan_payments.csv'
@@ -82,8 +77,4 @@ if __name__ == "__main__": # guard added to ensure the game only runs when the s
    for i in range(0,len(col_to_convert_to_categorical)): #loops over list of column names
        my_instance.obj_to_str(col_to_convert_to_categorical[i])
 
-
-loan_payments_df.info()
-print(loan_payments_df.iloc[26])
-
-save_to_csv(loan_payments_df,'loan_payments_transformed.csv')
+   save_to_csv(loan_payments_df,'loan_payments_transformed.csv')
