@@ -8,58 +8,85 @@ def read_csv(filename):
 
 class DataFrameInfo():
     '''
-    This class
+    This class contains functions that get information from the DataFrame
+    Attributes:
+    df (pd DataFrame): The dataframe to be evaluated 
     '''
     def __init__(self,df):
         self.dataframe = df
         return 
     
     def get_datatypes(self):
+        '''
+        This function returns the datatype of each column in the dataframe
+        '''
         dtypes = self.dataframe.dtypes
         return dtypes
     
     def get_uniquevals(self,column):
+        '''
+        This function returns the unique values of a column in the dataframe
+        '''
         unique_vals = self.dataframe[column].unique()
         return unique_vals
     
     def get_median(self,column):
+       '''
+       This function returns the median value of a column in the dataframe
+       '''
        median = self.dataframe[column].median()
        return median
     
     def get_stdev(self,column):
+       '''
+       This function returns the standard deviation of a column in the dataframe
+       '''
        stdev = self.dataframe[column].std()
        return stdev
     
     def get_mean(self,column):
+       '''
+       This function returns the mean of a column in the dataframe
+       '''
        mean = np.mean(self.dataframe[column])
        return mean
     
     def get_mode(self,column):
+       '''
+       This function returns the mode of a column in the dataframe
+       '''
        mode = self.dataframe[column].mode()
        return mode
     
     def print_shape(self):
+        '''
+        This function prints the shape of the dataframe 
+        '''
         print(self.dataframe.shape)
         return 
     
     def null_percentage(self,column):
+        '''
+        This function returns the percentage of null values in a column in the dataframe 
+        '''
         null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
         return null_pc
    
     def get_range(self,column):
+        '''
+        This function returns the percentage of null values in a column in the dataframe 
+        '''
         range = self.dataframe[column].max() - self.dataframe[column].min()
         return range
 
 if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
    filename = 'loan_payments_transformed.csv'
-   loan_payments_df = read_csv(filename)  
-   my_instance = DataFrameInfo(loan_payments_df)
+   loan_payments_df = read_csv(filename)  # calls the read_csv funciton to load data 
+   my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 
+   column_names = loan_payments_df.columns.tolist() # creates a list of the column headings as strings 
    dtypes = my_instance.get_datatypes()   
    print(loan_payments_df.head())
-   column_names = loan_payments_df.columns.tolist()
-   print(type(column_names))
-   print(len(column_names))
-   print(column_names)
+
 
 
        
