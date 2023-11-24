@@ -56,7 +56,14 @@ class DataFrameTransform():
       '''
       This function replaces null values in a specified column with the mode of the column
       '''
-      self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].mode())
+      self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].mode()[0])
+      return self.dataframe
+   
+   def impute_na_with_median(self,column):
+      '''
+      This function replaces null values in a specified column with the median of the column
+      '''
+      self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
       return self.dataframe
 
    
@@ -108,6 +115,14 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_drop_null_value_rows)):
       loan_payments_df_copy = remove_null.drop_null_rows(columns_to_drop_null_value_rows[i]) # drops rows with null values in specific columns
     
+   loan_payments_df_copy = remove_null.impute_na_with_mode('term') # impute null values with mode, as this is categorical data
+
+   loan_payments_df_copy = remove_null.impute_na_with_median('employment_length') # impute null value with median, to keep all values as whole numbers 
+
+   loan_payments_df = remove_null.impute_na_with_mean('funded_amount') # impute null values with mean as data is continuous with a normal distribution 
+   loan_payments_df = remove_null.impute_na_with_mean('int_rate') # impute null values with mean as data is continuous with a normal distribution
+   
+   
    
    my_instance_copy = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class 
 
@@ -115,10 +130,10 @@ if __name__ == "__main__":
    null_columns_copy = []
    for i in range (0, len(column_names_copy)): # to check that the correct columns and rows have been dropped 
       null_pc = my_instance_copy.null_percentage(column_names_copy[i])
-      #print(column_names_copy[i], null_pc)
+      print(column_names_copy[i], null_pc)
       if null_pc > 0.0:
         null_columns_copy.append(column_names_copy[i]) # append columns with null values to list 
-   #print(null_columns_copy)
+   print(null_columns_copy)
    
 
    for i in range(0, len(columns_to_impute)):
@@ -150,7 +165,7 @@ if __name__ == "__main__":
    #plotter_instance.plot_hist('employment_length')
     
        
-   print(loan_payments_df_copy['employment_length'].head(20))
+   #print(loan_payments_df_copy['employment_length'].head(20))
 
 
    
