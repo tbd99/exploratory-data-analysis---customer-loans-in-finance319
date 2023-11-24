@@ -6,10 +6,6 @@ def read_csv(filename):
     df_csv = pd.read_csv(filename)
     return df_csv 
 
-filename = 'loan_payments_transformed.csv'
-loan_payments_df = read_csv(filename)
-
-#loan_payments_df.info()
 class DataFrameInfo():
     '''
     This class
@@ -53,33 +49,17 @@ class DataFrameInfo():
     def get_range(self,column):
         range = self.dataframe[column].max() - self.dataframe[column].min()
         return range
-  
-my_instance = DataFrameInfo(loan_payments_df)
-dtypes = my_instance.get_datatypes()   
-u_vals = my_instance.get_uniquevals('home_ownership')
-print(u_vals)
-mode = my_instance.get_median('total_payment')
-print(mode)
 
-sd = my_instance.get_stdev('total_payment')
-print(sd)
-
-mean = my_instance.get_mean('total_payment')
-print(mean)
-
-my_instance.print_shape()
-
-mode = my_instance.get_mode('purpose')
-print(mode)
-
-
-nulls = my_instance.null_percentage('mths_since_last_record')
-print(nulls)
-
-range = my_instance.get_range('total_payment')
-print(range)
-
-
+if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
+   filename = 'loan_payments_transformed.csv'
+   loan_payments_df = read_csv(filename)  
+   my_instance = DataFrameInfo(loan_payments_df)
+   dtypes = my_instance.get_datatypes()   
+   print(loan_payments_df.head())
+   column_names = loan_payments_df.columns.tolist()
+   print(type(column_names))
+   print(len(column_names))
+   print(column_names)
 
 
        
