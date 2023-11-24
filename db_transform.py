@@ -58,13 +58,13 @@ if __name__ == "__main__":
    my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 
    column_names = loan_payments_df.columns.tolist() # creates a list of the column headings as strings 
    null_columns = []
-   print(type(null_columns))
+   #print(type(null_columns))
    for i in range (0, len(column_names)):
       null_pc = my_instance.null_percentage(column_names[i])
-      print(column_names[i], null_pc)
+      #print(column_names[i], null_pc)
       if null_pc > 0.0:
         null_columns.append(column_names[i])
-   print(null_columns)
+   #print(null_columns)
    
    columns_to_drop = ['mths_since_last_delinq','mths_since_last_record','next_payment_date','mths_since_last_major_derog'] # columns with > 50% null values, drop entire column
    columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # columns with a small amount of null values to be imputed
@@ -84,11 +84,31 @@ if __name__ == "__main__":
    null_columns_copy = []
    for i in range (0, len(column_names_copy)): # to check that the correct columns and rows have been dropped 
       null_pc = my_instance_copy.null_percentage(column_names_copy[i])
-      print(column_names_copy[i], null_pc)
+      #print(column_names_copy[i], null_pc)
       if null_pc > 0.0:
         null_columns_copy.append(column_names_copy[i]) # append columns with null values to list 
-   print(null_columns_copy)
+   #print(null_columns_copy)
    
+
+   for i in range(0, len(columns_to_impute)):
+      mean = my_instance_copy.get_mean(columns_to_impute[i])
+      print('MEAN', columns_to_impute[i], mean)
+
+   for i in range(0, len(columns_to_impute)):
+      stdv = my_instance_copy.get_stdev(columns_to_impute[i])
+      print('STDEV', columns_to_impute[i], stdv)
+
+   for i in range(0, len(columns_to_impute)):
+       mode = my_instance_copy.get_mode(columns_to_impute[i])
+       print('MODE', columns_to_impute[i], mode)
+    
+   for i in range(0, len(columns_to_impute)):
+       median = my_instance_copy.get_median(columns_to_impute[i])
+       print('MEDIAN', columns_to_impute[i], median)
+    
+   for i in range(0, len(columns_to_impute)):
+       range = my_instance_copy.get_range(columns_to_impute[i])
+       print('RANGE',columns_to_impute[i], range)
    
 
 
