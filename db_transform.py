@@ -1,16 +1,32 @@
-import numpy as np
-import pandas as pd
+
 from datetime import datetime 
 from db_datatransform import DataTransform
 from db_info import DataFrameInfo
 from db_info import read_csv
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 
 class Plotter():
    '''
+   This class contains functions to plot data
    '''
+   def __init__(self,df):
+      self.dataframe = df 
+
+   def plot_hist(self,column):
+      '''
+      This function plots a histogram of the specified column's data
+      '''
+      self.dataframe[column].hist(bins=40)
+      plt.show() 
+      
+      
    
 class DataFrameTransform():
    '''
+   This class contains functions to remove null values from data 
    '''
    def __init__(self,df):
       self.dataframe = df 
@@ -107,8 +123,15 @@ if __name__ == "__main__":
        print('MEDIAN', columns_to_impute[i], median)
     
    for i in range(0, len(columns_to_impute)):
-       range = my_instance_copy.get_range(columns_to_impute[i])
-       print('RANGE',columns_to_impute[i], range)
+       ranges = my_instance_copy.get_range(columns_to_impute[i])
+       print('RANGE',columns_to_impute[i], ranges)
+    
+   for i in range(0, len(columns_to_impute)):
+       my_instance_copy.get_normal_dist(columns_to_impute[i])
+       
+   
+
+
    
 
 
