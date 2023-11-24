@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from datetime import datetime 
+from scipy.stats import normaltest 
 
 def read_csv(filename):
     df_csv = pd.read_csv(filename)
@@ -78,7 +79,15 @@ class DataFrameInfo():
         '''
         range = self.dataframe[column].max() - self.dataframe[column].min()
         return range
-
+    
+    def get_normal_dist(self,column):
+        '''
+        This function returns the p value of the data, giving the normal distribution
+        '''
+        stat, p = normaltest(self.dataframe[column], nan_policy='omit')
+        print('Statistics=%.3f, p=%.3f' % (stat, p))
+        return stat, p
+    
 if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
    filename = 'loan_payments_transformed.csv'
    loan_payments_df = read_csv(filename)  # calls the read_csv funciton to load data 
