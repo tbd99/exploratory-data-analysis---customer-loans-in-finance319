@@ -96,13 +96,11 @@ if __name__ == "__main__":
    my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 
    column_names = loan_payments_df.columns.tolist() # creates a list of the column headings as strings 
    null_columns = []
-   #print(type(null_columns))
    for i in range (0, len(column_names)):
       null_pc = my_instance.null_percentage(column_names[i])
       #print(column_names[i], null_pc)
       if null_pc > 0.0:
         null_columns.append(column_names[i])
-   #print(null_columns)
    
    columns_to_drop = ['mths_since_last_delinq','mths_since_last_record','next_payment_date','mths_since_last_major_derog'] # columns with > 50% null values, drop entire column
    columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # columns with a small amount of null values to be imputed
@@ -116,16 +114,12 @@ if __name__ == "__main__":
       loan_payments_df_copy = remove_null.drop_null_rows(columns_to_drop_null_value_rows[i]) # drops rows with null values in specific columns
     
    loan_payments_df_copy = remove_null.impute_na_with_mode('term') # impute null values with mode, as this is categorical data
-
    loan_payments_df_copy = remove_null.impute_na_with_median('employment_length') # impute null value with median, to keep all values as whole numbers 
-
    loan_payments_df = remove_null.impute_na_with_mean('funded_amount') # impute null values with mean as data is continuous with a normal distribution 
    loan_payments_df = remove_null.impute_na_with_mean('int_rate') # impute null values with mean as data is continuous with a normal distribution
    
    
-   
    my_instance_copy = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class 
-
    column_names_copy = loan_payments_df_copy.columns.tolist() # creates a list of the column headings as strings 
    null_columns_copy = []
    for i in range (0, len(column_names_copy)): # to check that the correct columns and rows have been dropped 
@@ -135,7 +129,6 @@ if __name__ == "__main__":
         null_columns_copy.append(column_names_copy[i]) # append columns with null values to list 
    print(null_columns_copy)
    
-
    for i in range(0, len(columns_to_impute)):
       mean = my_instance_copy.get_mean(columns_to_impute[i])
       print('MEAN', columns_to_impute[i], mean)
@@ -160,6 +153,9 @@ if __name__ == "__main__":
        my_instance_copy.get_normal_dist(columns_to_impute[i])
 
    plotter_instance = Plotter(loan_payments_df_copy) 
+
+   loan_df_skew = loan_payments_df_copy.skew(axis=1,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+
 
    #for i in range(0, len(columns_to_impute)):
    #plotter_instance.plot_hist('employment_length')
