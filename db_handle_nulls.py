@@ -107,6 +107,10 @@ if __name__ == "__main__":
 
    my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 
    column_names = loan_payments_df.columns.tolist() # creates a list of the column headings as strings 
+   print(f"HEEEEEEE{column_names}")
+   loan_payments_df = loan_payments_df.drop(columns=loan_payments_df.columns[0], axis=1) # remove additional index column
+   #new_column_names = new_df.columns.tolist()
+   #print(f"BEEEEE{new_column_names}")
    null_columns = []
    for i in range (0, len(column_names)):
       null_pc = my_instance.null_percentage(column_names[i])
@@ -139,7 +143,7 @@ if __name__ == "__main__":
       print(column_names_copy[i], null_pc)
       if null_pc > 0.0:
         null_columns_copy.append(column_names_copy[i]) # append columns with null values to list 
-   print(null_columns_copy)
+   #print(null_columns_copy)
    
    for i in range(0, len(columns_to_impute)):
       mean = my_instance_copy.get_mean(columns_to_impute[i])
@@ -169,11 +173,13 @@ if __name__ == "__main__":
    plotter_instance = Plotter(loan_payments_df_copy) 
 
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
-   #print(loan_df_skew)
+   print(loan_df_skew)
    #print(type(loan_df_skew))
-   plotter_instance.plot_KDE('collection_recovery_fee')
-   plotter_instance.plot_hist('collection_recovery_fee')
+   plotter_instance.plot_KDE('last_payment_amount')
+   plotter_instance.plot_hist('last_payment_amount')
    skewed_columns = []
+   #print(loan_payments_df_copy.head(10))
+   #print(loan_payments_df_copy['Unnamed: 0 '])
    #for i in range(0,len(loan_df_skew)):
     #  if loan_df_skew[i][1] > 2 or loan_df_skew[i][1] < -2:
      #    skewed_columns.append(loan_df_skew[i][0])
