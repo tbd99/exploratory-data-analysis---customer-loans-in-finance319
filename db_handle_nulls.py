@@ -44,7 +44,6 @@ class Plotter():
       fig = px.box(self.dataframe, y=column,width=600, height=500, title=str(column))
       fig.show()
 
-      
    
 class DataFrameTransform():
    '''
@@ -106,9 +105,6 @@ class DataFrameTransform():
       return self.dataframe
 
 
-   
-   
-
 if __name__ == "__main__":
    filename = 'loan_payments.csv'
    loan_payments_df = read_csv(filename)  # calls the read_csv funciton to load data 
@@ -117,7 +113,7 @@ if __name__ == "__main__":
    col_to_convert_to_str = ['grade', 'sub_grade']
    col_to_convert_to_categorical = ['home_ownership','verification_status','loan_status','payment_plan','purpose','application_type']  
    
-   data_transform_instance = DataTransform(loan_payments_df) #initialise instance of class
+   data_transform_instance = DataTransform(loan_payments_df) #initialise instance of class for data type transformations
    
    for i in range(0,len(col_to_convert_to_datetime)): #loops over list of column names
        datetime_format = '%b-%Y'
@@ -133,12 +129,9 @@ if __name__ == "__main__":
        data_transform_instance.obj_to_str(col_to_convert_to_categorical[i])
   
 
-   my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 
+   my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class to obtain information on the dataframe
    column_names = loan_payments_df.columns.tolist() # creates a list of the column headings as strings 
-   print(f"HEEEEEEE{column_names}")
    loan_payments_df = loan_payments_df.drop(columns=loan_payments_df.columns[0], axis=1) # remove additional index column
-   #new_column_names = new_df.columns.tolist()
-   #print(f"BEEEEE{new_column_names}")
    null_columns = []
    for i in range (0, len(column_names)):
       null_pc = my_instance.null_percentage(column_names[i])
@@ -149,9 +142,9 @@ if __name__ == "__main__":
    columns_to_drop = ['mths_since_last_delinq','mths_since_last_record','next_payment_date','mths_since_last_major_derog'] # columns with > 50% null values, drop entire column
    columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # columns with a small amount of null values to be imputed
    columns_to_drop_null_value_rows = ['last_payment_date','last_credit_pull_date','collections_12_mths_ex_med'] # columns with < 1% null values, can drop rows with null values 
-   loan_payments_df_copy = loan_payments_df.copy() #create copy of dataframe before removing any values 
+   loan_payments_df_copy = loan_payments_df.copy() #create copy of dataframe before removing any values for data preservation
 
-   remove_null = DataFrameTransform(loan_payments_df_copy) # initialises an instance of the DataFrameTransform class 
+   remove_null = DataFrameTransform(loan_payments_df_copy) # initialises an instance of the DataFrameTransform class for dealing with null values 
    for i in range(0, len(columns_to_drop)):
       loan_payments_df_copy = remove_null.drop_column(columns_to_drop[i]) # drops columns with > 50 % null values
    for i in range(0, len(columns_to_drop_null_value_rows)):
@@ -163,10 +156,10 @@ if __name__ == "__main__":
    loan_payments_df = remove_null.impute_na_with_mean('int_rate') # impute null values with mean as data is continuous with a normal distribution
    
    
-   my_instance_copy = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class 
+   my_instance_copy = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class to obtain information on the dataframe
    column_names_copy = loan_payments_df_copy.columns.tolist() # creates a list of the column headings as strings 
    null_columns_copy = []
-   for i in range (0, len(column_names_copy)): # to check that the correct columns and rows have been dropped 
+   for i in range (0, len(column_names_copy)): # to check that the correct columns and rows have been dropped and view null percentages to confirm 
       null_pc = my_instance_copy.null_percentage(column_names_copy[i])
       print(column_names_copy[i], null_pc)
       if null_pc > 0.0:
@@ -196,28 +189,23 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
    
-   #mynew_columns = ['delinq_2yrs','inq_last_6mths', 'total_rec_late_fee','recoveries','collection_recovery_fee', 'collections_12_mths_ex_med']
-   #for i in range(0, len(mynew_columns)):
-    #  inq_unique = my_instance_copy.get_uniquevals(mynew_columns[i])
-      #print(mynew_columns[i], inq_unique)
-
-
-   plotter_instance = Plotter(loan_payments_df_copy) 
+   plotter_instance = Plotter(loan_payments_df_copy) # initialise an instance of the plotter class for data visualisation
 
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
    print(loan_df_skew)
    check_skewed_columns = loan_df_skew.index
    skewed_columns = []
-   for i in range(0, len(loan_df_skew)):
-      if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2:
+   for i in range(0, len(loan_df_skew)): 
+      if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2: # append columns with a skew < -2 or > 2 to the list
          skewed_columns.append(check_skewed_columns[i])
    #print(skewed_columns)
-   columns_to_remove = ['id','member_id','delinq_2yrs','inq_last_6mths','collections_12_mths_ex_med']
+
+   columns_to_remove = ['id','member_id','delinq_2yrs','inq_last_6mths','collections_12_mths_ex_med'] # skewed columns that do not need to be transformed
    for i in range(0, len(columns_to_remove)):
       skewed_columns.remove(columns_to_remove[i]) # removes columns that represent IDs or are categorical data
    
    #print(skewed_columns)
-   zero_columns_to_remove = ['out_prncp','out_prncp_inv','total_rec_late_fee','collection_recovery_fee']
+   zero_columns_to_remove = ['out_prncp','out_prncp_inv','total_rec_late_fee','collection_recovery_fee'] # list of columns containing a majority of 0 values
    for i in range(0, len(zero_columns_to_remove)):
       skewed_columns.remove(zero_columns_to_remove[i]) # removes columns that contain a majority of 0 values (median =0), meaning transformations are not appropriate
    loan_payments_df_transformed = loan_payments_df_copy.copy()
@@ -226,33 +214,14 @@ if __name__ == "__main__":
    for i in range(0, len(skewed_columns)): 
       transform_instance.log_transform(skewed_columns[i]) # perform log transform on selected columns 
    
-   loan_df_skew_log = loan_payments_df_transformed.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+   loan_df_skew_log = loan_payments_df_transformed.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe to check results of the transformation
    print(loan_df_skew_log) 
-   plotter_log_transformed = Plotter(loan_payments_df_transformed)
+
+   plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
    for i in range(0, len(skewed_columns)): 
       plotter_log_transformed.plot_KDE(skewed_columns[i])
 
-   #loan_payments_df_bc_transformed = loan_payments_df_copy.copy()
- #  bc_transform_instance = DataFrameTransform(loan_payments_df_bc_transformed) # initialise an instance of the class with a copy of the df 
 
-   #for i in range(0, len(skewed_columns)):
-  #    bc_transform_instance.box_cox_transform(skewed_columns[i])
-   
- #  plotter_bc_transformed = Plotter(loan_payments_df_bc_transformed)
-  # for i in range(0, len(skewed_columns)):
-  #    plotter_bc_transformed.plot_KDE(skewed_columns[i])
-
-
-   #plotter_instance.plot_KDE('last_payment_amount')
-   #plotter_instance.plot_hist('last_payment_amount')
-   
-   #print(loan_payments_df_copy.head(10))
-  
-   #for i in range(0, len(skewed_columns)):
-    #  plotter_instance.plot_KDE(skewed_columns[i])
-   
-   #for i in range(0, len(skewed_columns)):
-    #  plotter_instance.plot_box_whiskers(skewed_columns[i])
    
     
        
