@@ -168,30 +168,31 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
    
-   #v = my_instance_copy.get_uniquevals('collection_recovery_fee')
-   #print(f"yeeee {v}")
    plotter_instance = Plotter(loan_payments_df_copy) 
 
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
    print(loan_df_skew)
-   #print(type(loan_df_skew))
-   plotter_instance.plot_KDE('last_payment_amount')
-   plotter_instance.plot_hist('last_payment_amount')
+   check_skewed_columns = loan_df_skew.index
+   #print(check_skewed_columns)
+   #print(f"BEEEEE{type(check_skewed_columns)}")
+   #print(f"NNNNNN{check_skewed_columns[1]}")
+   #print(f"BEEEEE{type(loan_df_skew)}")
+   #print(loan_df_skew.iloc[1])
    skewed_columns = []
+   for i in range(0, len(loan_df_skew)):
+      if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2:
+         skewed_columns.append(check_skewed_columns[i])
+   print(skewed_columns)
+
+   #plotter_instance.plot_KDE('last_payment_amount')
+   #plotter_instance.plot_hist('last_payment_amount')
+   
    #print(loan_payments_df_copy.head(10))
-   #print(loan_payments_df_copy['Unnamed: 0 '])
-   #for i in range(0,len(loan_df_skew)):
-    #  if loan_df_skew[i][1] > 2 or loan_df_skew[i][1] < -2:
-     #    skewed_columns.append(loan_df_skew[i][0])
-
-
-
-
+  
    #for i in range(0, len(columns_to_impute)):
    #plotter_instance.plot_hist('employment_length')
     
        
-   #print(loan_payments_df_copy['employment_length'].head(20))
 
 
    
