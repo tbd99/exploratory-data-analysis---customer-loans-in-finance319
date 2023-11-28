@@ -40,8 +40,7 @@ class Plotter():
       '''
       This function plots a box and whisker plot for the specified column
       '''
-      fig = px.box(self.dataframe, y=column,width=600, height=500)
-      fig.title(str(column))
+      fig = px.box(self.dataframe, y=column,width=600, height=500, title=str(column))
       fig.show()
 
       
@@ -178,26 +177,38 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
    
+   mynew_columns = ['delinq_2yrs','inq_last_6mths', 'total_rec_late_fee','recoveries','collection_recovery_fee', 'collections_12_mths_ex_med']
+   for i in range(0, len(mynew_columns)):
+      inq_unique = my_instance_copy.get_uniquevals(mynew_columns[i])
+      print(mynew_columns[i], inq_unique)
+
+
    plotter_instance = Plotter(loan_payments_df_copy) 
 
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
-   print(loan_df_skew)
+   #print(loan_df_skew)
    check_skewed_columns = loan_df_skew.index
    skewed_columns = []
    for i in range(0, len(loan_df_skew)):
       if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2:
          skewed_columns.append(check_skewed_columns[i])
-   print(skewed_columns)
-   skewed_columns.remove('id') # remove ID columns
-   skewed_columns.remove('member_id') # remove member ID column
+   #print(skewed_columns)
+   columns_to_remove = ['id','member_id','delinq_2yrs','inq_last_6mths','collections_12_mths_ex_med']
+   for i in range(0, len(columns_to_remove)):
+      skewed_columns.remove(columns_to_remove[i]) # removes columns that represent IDs or are categorical data
+   
    print(skewed_columns)
    #plotter_instance.plot_KDE('last_payment_amount')
    #plotter_instance.plot_hist('last_payment_amount')
    
    #print(loan_payments_df_copy.head(10))
   
-   for i in range(0, len(skewed_columns)):
-      plotter_instance.plot_KDE(skewed_columns[i])
+   #for i in range(0, len(skewed_columns)):
+    #  plotter_instance.plot_KDE(skewed_columns[i])
+   
+   #for i in range(0, len(skewed_columns)):
+    #  plotter_instance.plot_box_whiskers(skewed_columns[i])
+   
     
        
 
