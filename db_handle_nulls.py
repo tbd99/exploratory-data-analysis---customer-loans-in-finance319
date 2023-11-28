@@ -6,6 +6,7 @@ from db_info import read_csv
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 class Plotter():
@@ -19,14 +20,25 @@ class Plotter():
       '''
       This function plots a histogram of the specified column's data
       '''
-      self.dataframe[column].hist(bins=40)
+      self.dataframe[column].hist(bins=100)
+      title = str(column)
+      plt.title(title)
       plt.show() 
-      
+   
+   def plot_KDE(self,column):
+      '''
+      THis function plots KDE plot of the specified column's data 
+      '''
+      sns.histplot(data=self.dataframe, x=column, kde=True)
+      sns.despine()
+      title = str(column)
+      plt.title(title)
+      plt.show()
       
    
 class DataFrameTransform():
    '''
-   This class contains functions to remove null values from data 
+   This class contains functions to remove null values from data and functions for data transformations 
    '''
    def __init__(self,df):
       self.dataframe = df 
@@ -131,30 +143,42 @@ if __name__ == "__main__":
    
    for i in range(0, len(columns_to_impute)):
       mean = my_instance_copy.get_mean(columns_to_impute[i])
-      print('MEAN', columns_to_impute[i], mean)
+      #print('MEAN', columns_to_impute[i], mean)
 
    for i in range(0, len(columns_to_impute)):
       stdv = my_instance_copy.get_stdev(columns_to_impute[i])
-      print('STDEV', columns_to_impute[i], stdv)
+      #print('STDEV', columns_to_impute[i], stdv)
 
    for i in range(0, len(columns_to_impute)):
        mode = my_instance_copy.get_mode(columns_to_impute[i])
-       print('MODE', columns_to_impute[i], mode)
+       #print('MODE', columns_to_impute[i], mode)
     
    for i in range(0, len(columns_to_impute)):
        median = my_instance_copy.get_median(columns_to_impute[i])
-       print('MEDIAN', columns_to_impute[i], median)
+       #print('MEDIAN', columns_to_impute[i], median)
     
    for i in range(0, len(columns_to_impute)):
        ranges = my_instance_copy.get_range(columns_to_impute[i])
-       print('RANGE',columns_to_impute[i], ranges)
+       #print('RANGE',columns_to_impute[i], ranges)
     
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
-
+   
+   #v = my_instance_copy.get_uniquevals('collection_recovery_fee')
+   #print(f"yeeee {v}")
    plotter_instance = Plotter(loan_payments_df_copy) 
 
-   loan_df_skew = loan_payments_df_copy.skew(axis=1,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+   loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+   #print(loan_df_skew)
+   #print(type(loan_df_skew))
+   plotter_instance.plot_KDE('collection_recovery_fee')
+   plotter_instance.plot_hist('collection_recovery_fee')
+   skewed_columns = []
+   #for i in range(0,len(loan_df_skew)):
+    #  if loan_df_skew[i][1] > 2 or loan_df_skew[i][1] < -2:
+     #    skewed_columns.append(loan_df_skew[i][0])
+
+
 
 
    #for i in range(0, len(columns_to_impute)):
