@@ -92,8 +92,8 @@ class DataFrameTransform():
       '''
       This function performs a log transform on the specified column, excluding 0 values
       '''
-      log_population = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
-      return log_population
+      self.dataframe[column] = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
+      return self.dataframe
    
    def box_cox_transform(self,column):
       '''
@@ -102,7 +102,8 @@ class DataFrameTransform():
       boxcox_population = self.dataframe[column]
       boxcox_population= stats.boxcox(boxcox_population)
       boxcox_population= pd.Series(boxcox_population[0])  
-      return boxcox_population
+      self.dataframe[column] = boxcox_population
+      return self.dataframe
 
 
    
@@ -195,16 +196,16 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_impute)):
        my_instance_copy.get_normal_dist(columns_to_impute[i])
    
-   mynew_columns = ['delinq_2yrs','inq_last_6mths', 'total_rec_late_fee','recoveries','collection_recovery_fee', 'collections_12_mths_ex_med']
-   for i in range(0, len(mynew_columns)):
-      inq_unique = my_instance_copy.get_uniquevals(mynew_columns[i])
-      print(mynew_columns[i], inq_unique)
+   #mynew_columns = ['delinq_2yrs','inq_last_6mths', 'total_rec_late_fee','recoveries','collection_recovery_fee', 'collections_12_mths_ex_med']
+   #for i in range(0, len(mynew_columns)):
+    #  inq_unique = my_instance_copy.get_uniquevals(mynew_columns[i])
+      #print(mynew_columns[i], inq_unique)
 
 
    plotter_instance = Plotter(loan_payments_df_copy) 
 
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
-   #print(loan_df_skew)
+   print(loan_df_skew)
    check_skewed_columns = loan_df_skew.index
    skewed_columns = []
    for i in range(0, len(loan_df_skew)):
@@ -215,7 +216,33 @@ if __name__ == "__main__":
    for i in range(0, len(columns_to_remove)):
       skewed_columns.remove(columns_to_remove[i]) # removes columns that represent IDs or are categorical data
    
-   print(skewed_columns)
+   #print(skewed_columns)
+   zero_columns_to_remove = ['out_prncp','out_prncp_inv','total_rec_late_fee','collection_recovery_fee']
+   for i in range(0, len(zero_columns_to_remove)):
+      skewed_columns.remove(zero_columns_to_remove[i]) # removes columns that contain a majority of 0 values (median =0), meaning transformations are not appropriate
+   loan_payments_df_transformed = loan_payments_df_copy.copy()
+   transform_instance = DataFrameTransform(loan_payments_df_transformed) # initialise an instance of the class with a copy of the df 
+
+   for i in range(0, len(skewed_columns)): 
+      transform_instance.log_transform(skewed_columns[i]) # perform log transform on selected columns 
+   
+   loan_df_skew_log = loan_payments_df_transformed.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+   print(loan_df_skew_log) 
+   plotter_log_transformed = Plotter(loan_payments_df_transformed)
+   for i in range(0, len(skewed_columns)): 
+      plotter_log_transformed.plot_KDE(skewed_columns[i])
+
+   #loan_payments_df_bc_transformed = loan_payments_df_copy.copy()
+ #  bc_transform_instance = DataFrameTransform(loan_payments_df_bc_transformed) # initialise an instance of the class with a copy of the df 
+
+   #for i in range(0, len(skewed_columns)):
+  #    bc_transform_instance.box_cox_transform(skewed_columns[i])
+   
+ #  plotter_bc_transformed = Plotter(loan_payments_df_bc_transformed)
+  # for i in range(0, len(skewed_columns)):
+  #    plotter_bc_transformed.plot_KDE(skewed_columns[i])
+
+
    #plotter_instance.plot_KDE('last_payment_amount')
    #plotter_instance.plot_hist('last_payment_amount')
    
@@ -225,7 +252,7 @@ if __name__ == "__main__":
     #  plotter_instance.plot_KDE(skewed_columns[i])
    
    #for i in range(0, len(skewed_columns)):
-     # plotter_instance.plot_box_whiskers(skewed_columns[i])
+    #  plotter_instance.plot_box_whiskers(skewed_columns[i])
    
     
        
