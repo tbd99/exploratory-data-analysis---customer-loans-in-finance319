@@ -3,6 +3,7 @@ from datetime import datetime
 from db_datatransform import DataTransform
 from db_info import DataFrameInfo
 from db_info import read_csv
+from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -92,6 +93,16 @@ class DataFrameTransform():
       This function performs a log transform on the specified column, excluding 0 values
       '''
       log_population = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
+      return log_population
+   
+   def box_cox_transform(self,column):
+      '''
+      This function performs a box cox transformation on the specified column 
+      '''
+      boxcox_population = self.dataframe[column]
+      boxcox_population= stats.boxcox(boxcox_population)
+      boxcox_population= pd.Series(boxcox_population[0])  
+      return boxcox_population
 
 
    
