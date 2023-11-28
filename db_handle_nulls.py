@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import plotly.express as px 
 
 
 class Plotter():
@@ -34,6 +35,15 @@ class Plotter():
       title = str(column)
       plt.title(title)
       plt.show()
+
+   def plot_box_whiskers(self,column):
+      '''
+      This function plots a box and whisker plot for the specified column
+      '''
+      fig = px.box(self.dataframe, y=column,width=600, height=500)
+      fig.title(str(column))
+      fig.show()
+
       
    
 class DataFrameTransform():
@@ -173,24 +183,21 @@ if __name__ == "__main__":
    loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
    print(loan_df_skew)
    check_skewed_columns = loan_df_skew.index
-   #print(check_skewed_columns)
-   #print(f"BEEEEE{type(check_skewed_columns)}")
-   #print(f"NNNNNN{check_skewed_columns[1]}")
-   #print(f"BEEEEE{type(loan_df_skew)}")
-   #print(loan_df_skew.iloc[1])
    skewed_columns = []
    for i in range(0, len(loan_df_skew)):
       if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2:
          skewed_columns.append(check_skewed_columns[i])
    print(skewed_columns)
-
+   skewed_columns.remove('id') # remove ID columns
+   skewed_columns.remove('member_id') # remove member ID column
+   print(skewed_columns)
    #plotter_instance.plot_KDE('last_payment_amount')
    #plotter_instance.plot_hist('last_payment_amount')
    
    #print(loan_payments_df_copy.head(10))
   
-   #for i in range(0, len(columns_to_impute)):
-   #plotter_instance.plot_hist('employment_length')
+   for i in range(0, len(skewed_columns)):
+      plotter_instance.plot_KDE(skewed_columns[i])
     
        
 
