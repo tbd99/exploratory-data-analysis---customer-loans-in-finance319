@@ -86,6 +86,13 @@ class DataFrameTransform():
       '''
       self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
       return self.dataframe
+   
+   def log_transform(self,column):
+      '''
+      This function performs a log transform on the specified column, excluding 0 values
+      '''
+      log_population = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
+
 
    
    
@@ -207,7 +214,7 @@ if __name__ == "__main__":
     #  plotter_instance.plot_KDE(skewed_columns[i])
    
    #for i in range(0, len(skewed_columns)):
-    #  plotter_instance.plot_box_whiskers(skewed_columns[i])
+     # plotter_instance.plot_box_whiskers(skewed_columns[i])
    
     
        
