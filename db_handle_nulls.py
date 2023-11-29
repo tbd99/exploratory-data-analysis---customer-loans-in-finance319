@@ -110,6 +110,14 @@ class DataFrameTransform():
       '''
       max_val = self.dataframe[column].max()
       self.dataframe = self.dataframe.drop(self.dataframe[self.dataframe[column] == max_val].index)
+      return self.dataframe
+   
+   def remove_negatives(self,column):
+      '''
+      This function removes rows containining negative values in the specified column
+      '''
+      self.dataframe = self.dataframe[self.dataframe[column] >= 0]
+      return self.dataframe
 
 
 
@@ -160,8 +168,8 @@ if __name__ == "__main__":
     
    loan_payments_df_copy = remove_null.impute_na_with_mode('term') # impute null values with mode, as this is categorical data
    loan_payments_df_copy = remove_null.impute_na_with_median('employment_length') # impute null value with median, to keep all values as whole numbers 
-   loan_payments_df = remove_null.impute_na_with_mean('funded_amount') # impute null values with mean as data is continuous with a normal distribution 
-   loan_payments_df = remove_null.impute_na_with_mean('int_rate') # impute null values with mean as data is continuous with a normal distribution
+   loan_payments_df_copy = remove_null.impute_na_with_mean('funded_amount') # impute null values with mean as data is continuous with a normal distribution 
+   loan_payments_df_copy = remove_null.impute_na_with_mean('int_rate') # impute null values with mean as data is continuous with a normal distribution
    
    
    my_instance_copy = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class to obtain information on the dataframe
@@ -224,14 +232,27 @@ if __name__ == "__main__":
    
    loan_df_skew_log = loan_payments_df_transformed.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe to check results of the transformation
    print(loan_df_skew_log) 
+   
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('open_accounts') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_accounts') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
 
    plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
    #for i in range(0, len(column_names_copy)): 
     #  plotter_log_transformed.plot_KDE(column_names_copy[i])
-   plotter_log_transformed.plot_box_whiskers('recoveries')
+   #plotter_log_transformed.plot_box_whiskers('recoveries')
    
    #for i in range(0, len(column_names_copy)): 
-    #  plotter_log_transformed.plot_box_whiskers(column_names_copy[i])
+   plotter_log_transformed.plot_box_whiskers('open_accounts')
+   plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
+   plotter_log_transformed.plot_box_whiskers('total_accounts')
+   plotter_log_transformed.plot_box_whiskers('collection_recovery_fee')
+
    
 
 
