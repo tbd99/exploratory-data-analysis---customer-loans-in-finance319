@@ -43,6 +43,14 @@ class Plotter():
       '''
       fig = px.box(self.dataframe, y=column,width=600, height=500, title=str(column))
       fig.show()
+   
+   def plot_corr_matrix(self):
+      '''
+      This funciton plots a correlation heatmap for the dataframe for numeric values
+      '''
+      sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm')
+      plt.show()
+      
 
    
 class DataFrameTransform():
@@ -233,29 +241,28 @@ if __name__ == "__main__":
    loan_df_skew_log = loan_payments_df_transformed.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe to check results of the transformation
    print(loan_df_skew_log) 
    
+   # remove outliers 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') # remove highest 2 values 
    loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('open_accounts') # remove highest value
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') # remove highest 2 values 
    loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
-   loan_payments_df_transformed = transform_instance.remove_top_val('open_accounts') 
-   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
-   loan_payments_df_transformed = transform_instance.remove_top_val('total_rec_late_fee') 
-   loan_payments_df_transformed = transform_instance.remove_top_val('total_accounts') 
+   loan_payments_df_transformed = transform_instance.remove_top_val('total_accounts') # remove highest value
+   loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') # remove highest 2 values 
    loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
-   loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
-   loan_payments_df_transformed = transform_instance.remove_negatives('recoveries') 
-   loan_payments_df_transformed = transform_instance.remove_negatives('last_payment_amount') 
+   loan_payments_df_transformed = transform_instance.remove_negatives('recoveries') # remove negative values
+   loan_payments_df_transformed = transform_instance.remove_negatives('last_payment_amount') # remove negative values
 
    plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
-   #for i in range(0, len(column_names_copy)): 
-    #  plotter_log_transformed.plot_KDE(column_names_copy[i])
-   #plotter_log_transformed.plot_box_whiskers('recoveries')
    
-   #for i in range(0, len(column_names_copy)): 
-   plotter_log_transformed.plot_box_whiskers('open_accounts')
-   plotter_log_transformed.plot_box_whiskers('total_accounts')
-   plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
-   plotter_log_transformed.plot_box_whiskers('collection_recovery_fee')
-   plotter_log_transformed.plot_box_whiskers('recoveries')
-   plotter_log_transformed.plot_box_whiskers('last_payment_amount')
+   #plotter_log_transformed.plot_box_whiskers('open_accounts')
+   #plotter_log_transformed.plot_box_whiskers('total_accounts')
+   #plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
+   #plotter_log_transformed.plot_box_whiskers('collection_recovery_fee')
+   #plotter_log_transformed.plot_box_whiskers('recoveries')
+   #plotter_log_transformed.plot_box_whiskers('last_payment_amount')
+
+   plotter_log_transformed.plot_corr_matrix()
    
 
    
