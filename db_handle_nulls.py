@@ -241,6 +241,8 @@ if __name__ == "__main__":
    loan_payments_df_transformed = transform_instance.remove_top_val('total_accounts') 
    loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
    loan_payments_df_transformed = transform_instance.remove_top_val('collection_recovery_fee') 
+   loan_payments_df_transformed = transform_instance.remove_negatives('recoveries') 
+   loan_payments_df_transformed = transform_instance.remove_negatives('last_payment_amount') 
 
    plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
    #for i in range(0, len(column_names_copy)): 
@@ -249,9 +251,12 @@ if __name__ == "__main__":
    
    #for i in range(0, len(column_names_copy)): 
    plotter_log_transformed.plot_box_whiskers('open_accounts')
-   plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
    plotter_log_transformed.plot_box_whiskers('total_accounts')
+   plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
    plotter_log_transformed.plot_box_whiskers('collection_recovery_fee')
+   plotter_log_transformed.plot_box_whiskers('recoveries')
+   plotter_log_transformed.plot_box_whiskers('last_payment_amount')
+   
 
    
 
