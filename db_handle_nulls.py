@@ -103,6 +103,14 @@ class DataFrameTransform():
       boxcox_population= pd.Series(boxcox_population[0])  
       self.dataframe[column] = boxcox_population
       return self.dataframe
+   
+   def remove_top_val(self,column):
+      '''
+      This function removes the row corresponding to the maximum value for the specified column
+      '''
+      max_val = self.dataframe[column].max()
+      self.dataframe = self.dataframe.drop(self.dataframe[self.dataframe[column] == max_val].index)
+
 
 
 if __name__ == "__main__":
@@ -218,8 +226,13 @@ if __name__ == "__main__":
    print(loan_df_skew_log) 
 
    plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
-   for i in range(0, len(skewed_columns)): 
-      plotter_log_transformed.plot_KDE(skewed_columns[i])
+   #for i in range(0, len(column_names_copy)): 
+    #  plotter_log_transformed.plot_KDE(column_names_copy[i])
+   plotter_log_transformed.plot_box_whiskers('recoveries')
+   
+   #for i in range(0, len(column_names_copy)): 
+    #  plotter_log_transformed.plot_box_whiskers(column_names_copy[i])
+   
 
 
    
