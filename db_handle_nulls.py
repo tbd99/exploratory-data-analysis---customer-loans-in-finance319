@@ -48,7 +48,7 @@ class Plotter():
       '''
       This funciton plots a correlation heatmap for the dataframe for numeric values
       '''
-      sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm')
+      sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm', xticklabels=True, yticklabels=True)
       plt.show()
       
 
@@ -253,15 +253,15 @@ if __name__ == "__main__":
    loan_payments_df_transformed = transform_instance.remove_negatives('recoveries') # remove negative values
    loan_payments_df_transformed = transform_instance.remove_negatives('last_payment_amount') # remove negative values
 
-   plotter_log_transformed = Plotter(loan_payments_df_transformed) # initialise an instanc of the plotter class with transformed data
    
-   #plotter_log_transformed.plot_box_whiskers('open_accounts')
-   #plotter_log_transformed.plot_box_whiskers('total_accounts')
-   #plotter_log_transformed.plot_box_whiskers('total_rec_late_fee')
-   #plotter_log_transformed.plot_box_whiskers('collection_recovery_fee')
-   #plotter_log_transformed.plot_box_whiskers('recoveries')
-   #plotter_log_transformed.plot_box_whiskers('last_payment_amount')
+   
+   correlated_columns = ['funded_amount','funded_amount_inv','instalment','total_payment_inv','total_rec_prncp','out_prncp_inv'] # drops some columns with correlation > 0.9 to give no correlation values above 0.9
+   correlation_drop = DataFrameTransform(loan_payments_df_transformed) #initialise and instance of the class for removing correlated columns
+   for i in range(0, len(correlated_columns)):
+      loan_payments_df_transformed = correlation_drop.drop_column(correlated_columns[i])
 
+ # initialise an instanc of the plotter class with transformed data
+   plotter_log_transformed = Plotter(loan_payments_df_transformed)   
    plotter_log_transformed.plot_corr_matrix()
    
 
