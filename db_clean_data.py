@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px 
 import seaborn as sns
-
+import pickle as pkl
 
 class Plotter():
    '''
@@ -279,5 +279,6 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
 
  # initialise an instanc of the plotter class with transformed data
    cleaned_data_plotter_instance = Plotter(loan_payments_df_transformed)   
-   cleaned_data_plotter_instance.plot_corr_matrix()
+   #cleaned_data_plotter_instance.plot_corr_matrix()
    
+   loan_payments_df_transformed.to_pickle('cleaned_data.pickle') 
