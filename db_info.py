@@ -88,7 +88,7 @@ class DataFrameInfo():
         print('Statistics=%.3f, p=%.3f' % (stat, p))
         return stat, p
     
-if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
+if __name__ == "__main__": # guard added to ensure code below only runs when the script is executed directly 
    filename = 'loan_payments_transformed.csv'
    loan_payments_df = read_csv(filename)  # calls the read_csv funciton to load data 
    my_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class 

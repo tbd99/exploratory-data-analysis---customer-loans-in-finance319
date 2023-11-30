@@ -76,5 +76,6 @@ if __name__ == "__main__": # guard added to ensure the game only runs when the s
 
    for i in range(0,len(col_to_convert_to_categorical)): #loops over list of column names
        my_instance.obj_to_str(col_to_convert_to_categorical[i])
-
+   loan_payments_df.info()
    save_to_csv(loan_payments_df,'loan_payments_transformed.csv')
+
