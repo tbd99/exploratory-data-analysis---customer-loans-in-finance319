@@ -40,3 +40,21 @@ total_loan_amount = charged_off_loans_df['loan_amount'].sum()
 total_amount_paid = charged_off_loans_df['total_payment'].sum()
 total_amount_paid_pc = (total_amount_paid/total_loan_amount)*100
 print(f"{total_amount_paid_pc.round(2)} %")
+
+# Calculate the loss in revenue these loans would have generated for the company if they had finished their term. 
+# amount paid each month, calc how many months of payments left, and how much each month 
+time_passed = ((charged_off_loans_df['last_payment_date'] - charged_off_loans_df['issue_date']))
+time_passed_days = time_passed.dt.days 
+charged_off_loans_df_calc = charged_off_loans_df.copy()
+charged_off_loans_df_calc['time_passed_months'] = (time_passed_days/30.5).round() # convert to int value and divide by avg month length to get no of months
+charged_off_loans_df_calc['time_remaining'] = charged_off_loans_df_calc['term'] - charged_off_loans_df_calc['time_passed_months']
+charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_remaining']*charged_off_loans_df_calc['instalment']
+#print(charged_off_loans_df_calc['time_remaining'].head(10))
+total_lost_revenue = charged_off_loans_df_calc['lost_revenue'].sum()
+print(total_loan_amount)
+
+
+#time_remaining = charged_off_loans_df['time_passed'] - charged_off_loans_df['term']
+
+# Visualise the loss projected over the remaining term of these loans.
+# scatter plot of amount paid per month across months 
