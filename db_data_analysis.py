@@ -2,6 +2,7 @@
 import pandas as pd
 import pickle 
 import seaborn as sns
+import matplotlib.pyplot as plt
 from db_clean_data import Plotter
 from db_clean_data import DataFrameTransform
 from db_datatransform import DataTransform
@@ -23,3 +24,9 @@ print(f"{loans_recov_against_total_funding.round(2)} %")
 
 # out_prncp_inv is same % as columns have 1:1 correlation?
 loans_recov_against_inv_funding = loans_recov_against_total_funding 
+funding = ['total_funding','investor_funding']
+recovery_pc = [loans_recov_against_total_funding, loans_recov_against_inv_funding]
+funding_df = pd.DataFrame({'Funding': funding, 'Recovery_percentage': recovery_pc})
+plt.bar(funding_df['Funding'], funding_df['Recovery_percentage'], width=0.8)
+plt.xticks(rotation=90)
+plt.show() 
