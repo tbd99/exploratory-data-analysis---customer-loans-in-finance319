@@ -52,8 +52,13 @@ class Plotter():
       '''
       sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm', xticklabels=True, yticklabels=True)
       plt.show()
-      
-
+   
+   def plot_bar_chart(self,my_data,x_axis,y_axis):
+      '''
+      This funciton plots a bar chart for a given dataset and specified axes
+      '''
+      sns.barplot(data=my_data, y=y_axis, x=x_axis)
+      plt.show()
    
 class DataFrameTransform():
    '''
