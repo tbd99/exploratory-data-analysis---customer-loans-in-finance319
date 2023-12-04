@@ -30,7 +30,7 @@ funding_df = pd.DataFrame({'Funding': funding, 'Recovery_percentage': recovery_p
 #plt.show() 
 
 # Calculate the percentage of charged off loans historically 
-charged_off_loans = (loan_payments_df.loan_status == 'Charged Off').sum() 
+charged_off_loans = (loan_payments_df.loan_status == 'Charged Off').sum()  
 charged_off_loans_pc = (charged_off_loans/(len(loan_payments_df)))*100
 print(f"{charged_off_loans_pc.round(2)} %")
 
@@ -53,8 +53,14 @@ charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_rema
 total_lost_revenue = charged_off_loans_df_calc['lost_revenue'].sum()
 print(total_loan_amount)
 
-
-#time_remaining = charged_off_loans_df['time_passed'] - charged_off_loans_df['term']
-
 # Visualise the loss projected over the remaining term of these loans.
 # scatter plot of amount paid per month across months 
+
+# print(loan_payments_df['loan_status'].head(10))
+# calculate the percentage of users behind with loan payments 
+late_loans_1 = (loan_payments_df.loan_status == 'Late (16-30 days)').sum()   # count no of loans marked as late
+late_loans_2 = (loan_payments_df.loan_status == 'Late (31-120 days)').sum()   # count no of loans marked as late
+late_loans_pc = ((late_loans_1 + late_loans_2)/(len(loan_payments_df)))*100 # calculate total % of late loans 
+print(late_loans_1,late_loans_2,late_loans_pc)
+
+# calculate amount owed here 
