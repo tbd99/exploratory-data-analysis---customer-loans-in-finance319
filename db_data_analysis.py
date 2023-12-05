@@ -47,9 +47,8 @@ month6_pc = (((loan_payments_recovery_projection_df.month6 <= 0.00).sum())/(len(
 month_no = [1,2,3,4,5,6]
 loans_recovered_pc = [month1_pc, month2_pc, month3_pc, month4_pc, month5_pc, month6_pc]
 recovery_df = pd.DataFrame({'Month': month_no,'Recovery_percentage': loans_recovered_pc}) # create df to plot data 
-sns.scatterplot(data=recovery_df, x='Month', y='Recovery_percentage') # scatter plot of data to visualise projection
-plt.show()
-
+#sns.scatterplot(data=recovery_df, x='Month', y='Recovery_percentage') # scatter plot of data to visualise projection
+#plt.show()
 
 
 # Calculate the percentage of charged off loans historically 
@@ -65,19 +64,18 @@ total_amount_paid_pc = (total_amount_paid/total_loan_amount)*100
 #print(f"{total_amount_paid_pc.round(2)} %")
 
 # Calculate the loss in revenue these loans would have generated for the company if they had finished their term. 
-# amount paid each month, calc how many months of payments left, and how much each month 
-time_passed = ((charged_off_loans_df['last_payment_date'] - charged_off_loans_df['issue_date']))
-time_passed_days = time_passed.dt.days 
+
+time_passed = ((charged_off_loans_df['last_payment_date'] - charged_off_loans_df['issue_date'])) # calculate how much time has passed of the loan term
+time_passed_days = time_passed.dt.days # convert to days 
 charged_off_loans_df_calc = charged_off_loans_df.copy()
 charged_off_loans_df_calc['time_passed_months'] = (time_passed_days/30.5).round() # convert to int value and divide by avg month length to get no of months
-charged_off_loans_df_calc['time_remaining'] = charged_off_loans_df_calc['term'] - charged_off_loans_df_calc['time_passed_months']
-charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_remaining']*charged_off_loans_df_calc['instalment']
+charged_off_loans_df_calc['time_remaining'] = charged_off_loans_df_calc['term'] - charged_off_loans_df_calc['time_passed_months'] # calculate number of months left of the term
+charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_remaining']*charged_off_loans_df_calc['instalment'] # amount that would be paid over the remaining term
 #print(charged_off_loans_df_calc['time_remaining'].head(10))
-total_lost_revenue = charged_off_loans_df_calc['lost_revenue'].sum()
 #print(total_loan_amount)
 
 # Visualise the loss projected over the remaining term of these loans.
-
+# ?? 
 
 # print(loan_payments_df['loan_status'].head(10))
 # calculate the percentage of users behind with loan payments 
@@ -93,6 +91,13 @@ loss_incurred = late_loans_df['out_prncp'].sum() # sum the outstanding amount fo
 #print(loss_incurred)
 
 # What is the projected loss of these loans if the customer were to finish the full loans term?
+time_passed_lateloans = ((late_loans_df['last_payment_date'] - late_loans_df['issue_date'])) # calculate how much time has passed of the loan term
+time_passed_days_lateloans = time_passed_lateloans.dt.days # convert to days 
+late_loans_df['time_passed_months'] = (time_passed_days_lateloans/30.5).round() # convert to int value and divide by avg month length to get no of months
+late_loans_df['time_remaining'] = late_loans_df['term'] - late_loans_df['time_passed_months'] # calculate number of months left of the term
+late_loans_df['outstanding_payments'] = late_loans_df['time_remaining']*late_loans_df['instalment'] # amount that would be paid over the remaining term
+projected_loss = late_loans_df['outstanding_payments'].sum() # 
+print(projected_loss)
 
 # If customers late on payments converted to Charged Off
 # what percentage of total expected revenue do these customers and the customers who have already defaulted on their loan represent?
