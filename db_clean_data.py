@@ -60,10 +60,12 @@ class Plotter():
       sns.barplot(data=my_data, y=y_axis, x=x_axis)
       plt.show()
    
-   def plot_countplot(self,columns):
+   def plot_countplot(self,column):
       '''
       This function plots a count plot for the specified column
       '''
+      sns.countplot(self.dataframe[column]).set(title=column,1)
+      #plt.show()
    
 class DataFrameTransform():
    '''
