@@ -29,6 +29,8 @@ funding_df = pd.DataFrame({'Funding': funding, 'Recovery_percentage': recovery_p
 #plt.xticks(rotation=90)
 #plt.show() 
 
+#visualise what percentage of the total amount would be recovered up to 6 months' in the future.
+
 # Calculate the percentage of charged off loans historically 
 charged_off_loans = (loan_payments_df.loan_status == 'Charged Off').sum()  
 charged_off_loans_pc = (charged_off_loans/(len(loan_payments_df)))*100
@@ -54,7 +56,7 @@ total_lost_revenue = charged_off_loans_df_calc['lost_revenue'].sum()
 print(total_loan_amount)
 
 # Visualise the loss projected over the remaining term of these loans.
-# scatter plot of amount paid per month across months 
+
 
 # print(loan_payments_df['loan_status'].head(10))
 # calculate the percentage of users behind with loan payments 
@@ -63,4 +65,20 @@ late_loans_2 = (loan_payments_df.loan_status == 'Late (31-120 days)').sum()   # 
 late_loans_pc = ((late_loans_1 + late_loans_2)/(len(loan_payments_df)))*100 # calculate total % of late loans 
 print(late_loans_1,late_loans_2,late_loans_pc)
 
-# calculate amount owed here 
+# calculate how much loss the company would incur their status was changed to Charged Off
+
+late_loans_df = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)'])]) # filter df to obtain only rows with late status 
+loss_incurred = late_loans_df['out_prncp'].sum() # sum the outstanding amount for each late loan to calculate loss 
+print(loss_incurred)
+
+# What is the projected loss of these loans if the customer were to finish the full loans term?
+
+# If customers late on payments converted to Charged Off
+# what percentage of total expected revenue do these customers and the customers who have already defaulted on their loan represent?
+lost_revenue_df = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)','Charged Off'])]) # filters customers who have already defaulted on loans as well as those with late payment status 
+monthly_revenue_late_customers = lost_revenue_df['instalment'].sum()
+print(monthly_revenue_late_customers)
+total_monthly_revenue = loan_payments_df['instalment'].sum()
+print(total_monthly_revenue)
+total_revenue_pc = (monthly_revenue_late_customers/total_monthly_revenue)*100
+print(total_revenue_pc.round(2))
