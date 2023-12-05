@@ -13,15 +13,26 @@ Skewed columns are identified and handled by transformation
 Outliers are identified and removed if appropriate
 Overly correlated columns are identified and dropped
 
+Analysis is then performed on the transformed and cleaned data to uncover relationships and information about the state of the loans and future projections
+
 ## Installation instructions
+Code was created using Python 3.11.4
+The following libraries are used: datetime, matplotlib.pyplot, numpy, pandas, pickle, plotly.express, scipy.stats, seaborn,sqlalchemy, yaml
 
 ## Usage instructions 
+Files should be run in the following order:
+1. db_utils.py
+2. db_datatransform.py
+3. db_info.py
+4. db_clean_data.py
+5. db_data_analysis.py
 
 ## File structure
 db_utils.py - This file contains the code for extracting the data from the cloud into a csv file 
 db_info.py - This file contains classes for obtaining descriptive statistics for columns in the dataframe
 db_datatransform.py - This file contains classes for transforming data types in the dataframe
 db_clean_data.py - This file contains classes for dealing with null values, skewed data, outliers, and overly correlated columns 
-
+db_data_analysis.py - This file contains the code for analysing the cleaned and transformed data
 
 ## License information
+License is Apache License 2.0, full details can be found in license.txt
