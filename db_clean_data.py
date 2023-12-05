@@ -37,7 +37,7 @@ class Plotter():
       sns.despine()
       title = str(column)
       plt.title(title)
-      plt.show()
+      #plt.show()
 
    def plot_box_whiskers(self,column):
       '''
@@ -59,6 +59,11 @@ class Plotter():
       '''
       sns.barplot(data=my_data, y=y_axis, x=x_axis)
       plt.show()
+   
+   def plot_countplot(self,columns):
+      '''
+      This function plots a count plot for the specified column
+      '''
    
 class DataFrameTransform():
    '''
@@ -236,7 +241,7 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    for i in range(0, len(loan_df_skew)): 
       if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2: # append columns with a skew < -2 or > 2 to the list
          skewed_columns.append(check_skewed_columns[i])
-   #print(skewed_columns)
+  
 
    skewed_columns_to_ignore = ['id','member_id','delinq_2yrs','inq_last_6mths','collections_12_mths_ex_med'] # skewed columns that do not need to be transformed
    for i in range(0, len(skewed_columns_to_ignore)):
@@ -245,7 +250,7 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    zero_maj_skewed_columns_to_ignore = ['out_prncp','out_prncp_inv','total_rec_late_fee','collection_recovery_fee'] # list of columns containing a majority of 0 values
    for i in range(0, len(zero_maj_skewed_columns_to_ignore)):
       skewed_columns.remove(zero_maj_skewed_columns_to_ignore[i]) # removes columns that contain a majority of 0 values (median =0), meaning transformations are not appropriate
-   
+   # print(f"WOOOOOOOO{skewed_columns}")
    loan_payments_df_transformed = loan_payments_df_copy.copy() # create copy of transformed data with appropriate naming
 
    transform_instance = DataFrameTransform(loan_payments_df_transformed) # initialise an instance of the class with the transformed dataframe
@@ -277,7 +282,7 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    for i in range(0, len(columns_with_negatives)):
       loan_payments_df_transformed = transform_instance.remove_negatives(columns_with_negatives[i]) # remove negative values
 
-   correlated_columns = ['funded_amount','funded_amount_inv','instalment','total_payment_inv','total_rec_prncp','out_prncp_inv'] # drops some columns with correlation > 0.9 to give no correlation values above 0.9
+   correlated_columns = ['funded_amount','funded_amount_inv','total_payment_inv','total_rec_prncp','out_prncp_inv'] # drops some columns with correlation > 0.9 to give no correlation values above 0.9 #'instalment',
    correlation_drop = DataFrameTransform(loan_payments_df_transformed) #initialise and instance of the class for removing correlated columns
    for i in range(0, len(correlated_columns)):
       loan_payments_df_transformed = correlation_drop.drop_column(correlated_columns[i])
