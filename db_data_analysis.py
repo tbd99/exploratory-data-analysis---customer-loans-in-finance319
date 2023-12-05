@@ -113,92 +113,98 @@ total_revenue_pc = (monthly_revenue_late_customers/total_monthly_revenue)*100
 
 loan_payments_df_stopped_paying = loan_payments_df.loc[loan_payments_df['loan_status']=='Charged Off'] # subset containing only customers who have stopped paying
 loan_payments_df_late_payments = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)'])]) # subset containings customers with late payments
+
 # initialise instances of plotter class for each df
 original_df_plotter = Plotter(loan_payments_df)
 stopped_paying_df_plotter = Plotter(loan_payments_df_stopped_paying)
 late_payments_df_plotter = Plotter(loan_payments_df_late_payments)
 
-# grade of the loan as an indicator 
-# visualise distribution of grade of loan for entire dataset, customers who hae stopped paying, customers late on payment
-fig1 = plt.figure(1)
-#original_df_plotter.plot_KDE('grade')
-original_df_plotter.plot_countplot('grade')
+# intiailise instances of dataframeinfo class for each df
 
-#sns.countplot(loan_payments_df['grade'])
-fig2 = plt.figure(2)
-#stopped_paying_df_plotter.plot_KDE('grade')
-stopped_paying_df_plotter.plot_countplot('grade')
-fig3 = plt.figure(3)
-#late_payments_df_plotter.plot_KDE('grade')
-late_payments_df_plotter.plot_countplot('grade')
+original_df_info = DataFrameInfo(loan_payments_df)
+stopped_paying_df_info = DataFrameInfo(loan_payments_df_stopped_paying)
+late_payments_df_info = DataFrameInfo(loan_payments_df_late_payments)
+
+# visualise data for different columns for entire dataset, customers who hae stopped paying, customers late on payment to identify indicators
+
+# grade of the loan as an indicator - NOT STRONG INDICATOR
+#fig1 = plt.figure(1)
+#original_df_plotter.plot_countplot('grade') # visualise distribution for all data
+#fig2 = plt.figure(2)
+#stopped_paying_df_plotter.plot_countplot('grade')  # visualise distribution for customers who are not paying
+#fig3 = plt.figure(3)
+#late_payments_df_plotter.plot_countplot('grade') # visualise distribution for customers who are late paying
 
 # purpose of loan as indicator - NOT STRONG INDICATOR
-fig4 = plt.figure(4)
-original_df_plotter.plot_countplot('purpose')
-fig5 = plt.figure(5)
-stopped_paying_df_plotter.plot_countplot('purpose')
-fig6 = plt.figure(6)
-late_payments_df_plotter.plot_countplot('purpose')
+#fig4 = plt.figure(4)
+#original_df_plotter.plot_countplot('purpose') # visualise distribution for all data
+#fig5 = plt.figure(5)
+#stopped_paying_df_plotter.plot_countplot('purpose')  # visualise distribution for customers who are not paying
+#fig6 = plt.figure(6)
+#late_payments_df_plotter.plot_countplot('purpose') # visualise distribution for customers who are late paying
 
-# home owenership as indicator
-fig7 = plt.figure(7)
-original_df_plotter.plot_countplot('home_ownership')
-fig8 = plt.figure(8)
-stopped_paying_df_plotter.plot_countplot('home_ownership')
-fig9 = plt.figure(9)
-late_payments_df_plotter.plot_countplot('home_ownership')
+# home owenership as indicator - NOT STRONG INDICATOR
+#fig7 = plt.figure(7)
+#original_df_plotter.plot_countplot('home_ownership') # visualise distribution for all data
+#fig8 = plt.figure(8)
+#stopped_paying_df_plotter.plot_countplot('home_ownership')  # visualise distribution for customers who are not paying
+#fig9 = plt.figure(9)
+#late_payments_df_plotter.plot_countplot('home_ownership') # visualise distribution for customers who are late paying
 
-# total accounts as indicator
-fig10 = plt.figure(10)
-original_df_plotter.plot_KDE('total_accounts')
-fig11 = plt.figure(11)
-stopped_paying_df_plotter.plot_KDE('total_accounts')
-fig12 = plt.figure(12)
-late_payments_df_plotter.plot_KDE('total_accounts')
-# probably not, check if time
 
-# payment plan as indicator
-#fig13 = plt.figure(13)
-#original_df_plotter.plot_countplot('payment_plan')
-#fig14 = plt.figure(14)
-#stopped_paying_df_plotter.plot_countplot('payment_plan')
-#fig15 = plt.figure(15)
-#late_payments_df_plotter.plot_countplot('payment_plan')
-
-## verification status as indicator
-#fig16 = plt.figure(16)
-#original_df_plotter.plot_countplot('verification_status')
-#fig17 = plt.figure(17)
-#stopped_paying_df_plotter.plot_countplot('verification_status')
-#fig18 = plt.figure(18)
-#late_payments_df_plotter.plot_countplot('verification_status')
-
-# other indicators to check:  total_rec_late_fee, mths_since_last_major_derog chec DESCRIPTIVE STATS TO SEEE!!!! 
-
-#out_prncp as indicator  POSSIBLY? 
+#out_prncp as indicator 
 fig19 = plt.figure(19)
-original_df_plotter.plot_KDE('out_prncp')
+original_df_plotter.plot_KDE('out_prncp') # visualise distribution for all data
 fig20 = plt.figure(20)
-stopped_paying_df_plotter.plot_KDE('out_prncp')
+stopped_paying_df_plotter.plot_KDE('out_prncp')  # visualise distribution for customers who are not paying
 fig21 = plt.figure(21)
-late_payments_df_plotter.plot_KDE('out_prncp')
-## calc means
+late_payments_df_plotter.plot_KDE('out_prncp') # visualise distribution for customers who are late paying
 
-# total_rec_late_fee as indicator POSSIBLY?
+original_mean_out_prncp = original_df_info.get_mean('out_prncp') # caluclate mean for all data
+stopped_paying_mean_out_prncp = stopped_paying_df_info.get_mean('out_prncp') # calcualte mean for customers who are not paying
+late_payment_mean_out_prncp = late_payments_df_info.get_mean('out_prncp') # calcualte mean for customers who are late paying
+print(original_mean_out_prncp, stopped_paying_mean_out_prncp, late_payment_mean_out_prncp) 
+# higher average out_prncp for those with late payments, suggests this is an indicator for late payments 
+
+# total_rec_late_fee as indicator 
 fig22 = plt.figure(22)
-original_df_plotter.plot_KDE('total_rec_late_fee')
+original_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for all data
 fig23 = plt.figure(23)
-stopped_paying_df_plotter.plot_KDE('total_rec_late_fee')
+stopped_paying_df_plotter.plot_KDE('total_rec_late_fee')  # visualise distribution for customers who are not paying
 fig24 = plt.figure(24)
-late_payments_df_plotter.plot_KDE('total_rec_late_fee')
-# calc means,
+late_payments_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for customers who are late paying
+original_mean_total_rec_late_fee = original_df_info.get_mean('total_rec_late_fee') # caluclate mean for all data
+stopped_paying_mean_total_rec_late_fee = stopped_paying_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are not paying
+late_payment_mean_total_rec_late_fee = late_payments_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are late paying
+print(original_mean_total_rec_late_fee, stopped_paying_mean_total_rec_late_fee, late_payment_mean_total_rec_late_fee) 
+# higher average total late fees for those with late payments or charged off payments, suggests this is an indicator of late payment
 
-# total_rec_int as indicator POSSIBLY?
-fig25 = plt.figure(25)
-original_df_plotter.plot_KDE('total_rec_int')
+# total_rec_int as indicator - NOT strong indicator
+fig25 = plt.figure(25) 
+original_df_plotter.plot_KDE('total_rec_int') # visualise distribution for all data
 fig26 = plt.figure(26)
-stopped_paying_df_plotter.plot_KDE('total_rec_int')
+stopped_paying_df_plotter.plot_KDE('total_rec_int') # visualise distribution for customers who are not paying
 fig27 = plt.figure(27)
-late_payments_df_plotter.plot_KDE('total_rec_int')
-# calc mean for each 
+late_payments_df_plotter.plot_KDE('total_rec_int') # visualise distribution for customers who are late paying
+original_mean_total_rec_int = original_df_info.get_mean('total_rec_int') # caluclate mean for all data
+stopped_paying_mean_total_rec_int = stopped_paying_df_info.get_mean('total_rec_int') # calcualte mean for customers who are not paying
+late_payment_mean_total_rec_int= late_payments_df_info.get_mean('total_rec_int') # calcualte mean for customers who are late paying
+print(original_mean_total_rec_int, stopped_paying_mean_total_rec_int, late_payment_mean_total_rec_int) 
+# minimal difference in averages suggests total_rec_int not an indicator 
+
+#last_payment_amount as indicator 
+fig125 = plt.figure(125)
+original_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for all data
+fig126 = plt.figure(126)
+stopped_paying_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for customers who are not paying
+fig127 = plt.figure(127)
+late_payments_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for customers who are late paying
+
+original_mean_last_payment_amount = original_df_info.get_mean('last_payment_amount') # caluclate mean for all data
+stopped_paying_mean_last_payment_amount = stopped_paying_df_info.get_mean('last_payment_amount') # calcualte mean for customers who are not paying
+late_payment_mean_last_payment_amount= late_payments_df_info.get_mean('last_payment_amount') # calcualte mean for customers who are late paying
+print(original_mean_last_payment_amount, stopped_paying_mean_last_payment_amount, late_payment_mean_last_payment_amount)
+
+
+
 plt.show() 
