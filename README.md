@@ -33,6 +33,12 @@ db_info.py - This file contains classes for obtaining descriptive statistics for
 db_datatransform.py - This file contains classes for transforming data types in the dataframe
 db_clean_data.py - This file contains classes for dealing with null values, skewed data, outliers, and overly correlated columns 
 db_data_analysis.py - This file contains the code for analysing the cleaned and transformed data
+db_familiarise.py - This file contains rough working and code for familiarisation with the dataset
+license.txt - This file contains the infromation for the license applicable to this project
+data_dictionary.md - This file is a dictionary of all the columns in the data set and what data they refer to 
+loan_payments.csv - This file is the original dataset 
+loan_payments_transformed.csv - This file contains the dataset with data transformations
+cleaned_data.pickle - This file contains the fully cleaned and transformed dataset ready for analysis 
 
 ## License information
 License is Apache License 2.0, full details can be found in license.txt
