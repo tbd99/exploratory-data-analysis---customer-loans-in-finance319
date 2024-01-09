@@ -125,6 +125,13 @@ class DataFrameTransform():
       self.dataframe[column] = pd.Series((stats.boxcox(self.dataframe[column]))[0]) 
       return self.dataframe
    
+   def yeo_johnson_transform(self, column):
+      '''
+      This function performs a yeo-johnson transformation on the specified column
+      '''
+      self.dataframe[column] = pd.Series((stats.yeojohnson(self.dataframe[column]))[0])
+      return self.dataframe
+
    def remove_top_val(self, column):
       '''
       This function removes the row corresponding to the maximum value for the specified column
