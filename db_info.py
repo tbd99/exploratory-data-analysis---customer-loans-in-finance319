@@ -13,7 +13,7 @@ class DataFrameInfo():
     Attributes:
     df (pd DataFrame): The dataframe to be evaluated 
     '''
-    def __init__(self,df):
+    def __init__(self, df):
         self.dataframe = df
         return 
     
@@ -24,35 +24,35 @@ class DataFrameInfo():
         dtypes = self.dataframe.dtypes
         return dtypes
     
-    def get_uniquevals(self,column):
+    def get_uniquevals(self, column):
         '''
         This function returns the unique values of a column in the dataframe
         '''
         unique_vals = self.dataframe[column].unique()
         return unique_vals
     
-    def get_median(self,column):
+    def get_median(self, column):
        '''
        This function returns the median value of a column in the dataframe
        '''
        median = self.dataframe[column].median()
        return median
     
-    def get_stdev(self,column):
+    def get_stdev(self, column):
        '''
        This function returns the standard deviation of a column in the dataframe
        '''
        stdev = self.dataframe[column].std()
        return stdev
     
-    def get_mean(self,column):
+    def get_mean(self, column):
        '''
        This function returns the mean of a column in the dataframe
        '''
        mean = np.mean(self.dataframe[column])
        return mean
     
-    def get_mode(self,column):
+    def get_mode(self, column):
        '''
        This function returns the mode of a column in the dataframe
        '''
@@ -66,21 +66,21 @@ class DataFrameInfo():
         print(self.dataframe.shape)
         return 
     
-    def null_percentage(self,column):
+    def null_percentage(self, column):
         '''
         This function returns the percentage of null values in a column in the dataframe 
         '''
         null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
         return null_pc
    
-    def get_range(self,column):
+    def get_range(self, column):
         '''
         This function returns the percentage of null values in a column in the dataframe 
         '''
         range = self.dataframe[column].max() - self.dataframe[column].min()
         return range
     
-    def get_normal_dist(self,column):
+    def get_normal_dist(self, column):
         '''
         This function returns the p value of the data, giving the normal distribution
         '''
