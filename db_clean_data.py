@@ -17,10 +17,10 @@ class Plotter():
    Attributes:
     df (pd DataFrame): The dataframe to be evaluated 
    '''
-   def __init__(self,df):
+   def __init__(self, df):
       self.dataframe = df 
 
-   def plot_hist(self,column):
+   def plot_hist(self, column):
       '''
       This function plots a histogram of the specified column
       '''
@@ -29,7 +29,7 @@ class Plotter():
       plt.title(title)
       plt.show() 
    
-   def plot_KDE(self,column):
+   def plot_KDE(self, column):
       '''
       This function plots KDE plot of the specified column
       '''
@@ -39,7 +39,7 @@ class Plotter():
       plt.title(title)
       #plt.show()
 
-   def plot_box_whiskers(self,column):
+   def plot_box_whiskers(self, column):
       '''
       This function plots a box and whisker plot for the specified column
       '''
@@ -53,7 +53,7 @@ class Plotter():
       sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm', xticklabels=True, yticklabels=True)
       plt.show()
    
-   def plot_bar_chart(self,my_data,x_axis,y_axis):
+   def plot_bar_chart(self, my_data, x_axis, y_axis):
       '''
       This funciton plots a bar chart for a given dataset and specified axes
       '''
@@ -73,59 +73,59 @@ class DataFrameTransform():
    Attributes:
     df (pd DataFrame): The dataframe to be evaluated 
    '''
-   def __init__(self,df):
+   def __init__(self, df):
       self.dataframe = df 
       
-   def drop_column(self,column):
+   def drop_column(self, column):
       '''
       This function drops the specified column from the dataframe
       '''
       self.dataframe = self.dataframe.drop(column, axis =1)
       return self.dataframe
    
-   def drop_null_rows(self,column):
+   def drop_null_rows(self, column):
       '''
       This function deletes all rows containing null values in the specified column
       '''
       self.dataframe = self.dataframe.dropna(subset=[column])
       return self.dataframe
    
-   def impute_na_with_mean(self,column):
+   def impute_na_with_mean(self, column):
       '''
       This function replaces null values in a specified column with the mean of the column
       '''
       self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
       return self.dataframe
    
-   def impute_na_with_mode(self,column):
+   def impute_na_with_mode(self, column):
       '''
       This function replaces null values in a specified column with the mode of the column
       '''
       self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].mode()[0])
       return self.dataframe
    
-   def impute_na_with_median(self,column):
+   def impute_na_with_median(self, column):
       '''
       This function replaces null values in a specified column with the median of the column
       '''
       self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
       return self.dataframe
    
-   def log_transform(self,column):
+   def log_transform(self, column):
       '''
       This function performs a log transform on the specified column, excluding 0 values
       '''
       self.dataframe[column] = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
       return self.dataframe
    
-   def box_cox_transform(self,column):
+   def box_cox_transform(self, column):
       '''
       This function performs a box cox transformation on the specified column 
       ''' 
       self.dataframe[column] = pd.Series((stats.boxcox(self.dataframe[column]))[0]) 
       return self.dataframe
    
-   def remove_top_val(self,column):
+   def remove_top_val(self, column):
       '''
       This function removes the row corresponding to the maximum value for the specified column
       '''
@@ -133,7 +133,7 @@ class DataFrameTransform():
       self.dataframe = self.dataframe.drop(self.dataframe[self.dataframe[column] == max_val].index)
       return self.dataframe
    
-   def remove_negatives(self,column):
+   def remove_negatives(self, column):
       '''
       This function removes rows containining negative values in the specified column
       '''
@@ -146,10 +146,19 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    filename = 'loan_payments.csv'
    loan_payments_df = read_csv(filename)  # calls the read_csv funciton to load data 
 
-   col_to_convert_to_datetime = ['issue_date', 'earliest_credit_line', 'last_payment_date','next_payment_date', 'last_credit_pull_date'] # list of strings specifying columns to be converted
+   col_to_convert_to_datetime = ['issue_date', 
+                                 'earliest_credit_line', 
+                                 'last_payment_date',
+                                 'next_payment_date', 
+                                 'last_credit_pull_date'] # list of strings specifying columns to be converted
    col_to_convert_to_float = ['term','employment_length'] # list of strings of column names
    col_to_convert_to_str = ['grade', 'sub_grade'] # list of strings of column names
-   col_to_convert_to_categorical = ['home_ownership','verification_status','loan_status','payment_plan','purpose','application_type']  # list of strings of column names
+   col_to_convert_to_categorical = ['home_ownership',
+                                    'verification_status', 
+                                    'loan_status', 
+                                    'payment_plan', 
+                                    'purpose', 
+                                    'application_type']  # list of strings of column names
    
    data_transform_instance = DataTransform(loan_payments_df) # initialise instance of class for data type transformations
    
@@ -177,9 +186,14 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
       if null_pc > 0.0:
         null_columns.append(column_names[i]) # append to list of columns if there are any null values 
    
-   columns_to_drop = ['mths_since_last_delinq','mths_since_last_record','next_payment_date','mths_since_last_major_derog'] # list of strings of columns with > 50% null values, drop entire column
+   columns_to_drop = ['mths_since_last_delinq', 
+                      'mths_since_last_record', 
+                      'next_payment_date', 
+                      'mths_since_last_major_derog'] # list of strings of columns with > 50% null values, drop entire column
    columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # list of strings of columns with a small amount of null values to be imputed
-   columns_to_drop_null_value_rows = ['last_payment_date','last_credit_pull_date','collections_12_mths_ex_med'] # list of strings of columns with < 1% null values, can drop rows with null values 
+   columns_to_drop_null_value_rows = ['last_payment_date', 
+                                      'last_credit_pull_date', 
+                                      'collections_12_mths_ex_med'] # list of strings of columns with < 1% null values, can drop rows with null values 
 
    loan_payments_df_copy = loan_payments_df.copy() #create copy of dataframe before removing any values for data preservation
 
