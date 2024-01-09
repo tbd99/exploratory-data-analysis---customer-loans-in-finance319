@@ -13,7 +13,7 @@ def load_yaml(myfile):
       yaml_dict = yaml.safe_load(f)
    return yaml_dict
 
-def save_to_csv(my_df,filename):
+def save_to_csv(my_df, filename):
    '''
    This function saves a dataframe to a csv file
    '''
