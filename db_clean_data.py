@@ -125,6 +125,13 @@ class DataFrameTransform():
       self.dataframe[column] = self.dataframe[column].map(lambda i: np.sqrt(i) if i >= 0 else i)
       return self.dataframe
    
+   def cubrt_transform(self, column):
+      '''
+      This function performs a cube root transform on the specified column
+      '''
+      self.dataframe[column] = self.dataframe[column].map(lambda i: np.cbrt(i))
+      return self.dataframe
+   
    def box_cox_transform(self, column):
       '''
       This function performs a box cox transformation on the specified column 
