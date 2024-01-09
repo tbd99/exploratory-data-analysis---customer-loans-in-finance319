@@ -189,13 +189,13 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    columns_to_drop = ['mths_since_last_delinq', 
                       'mths_since_last_record', 
                       'next_payment_date', 
-                      'mths_since_last_major_derog'] # list of strings of columns with > 50% null values, drop entire column
-   columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # list of strings of columns with a small amount of null values to be imputed
+                      'mths_since_last_major_derog'] # list of strings of columns with > 50% null values
+   columns_to_impute = ['funded_amount','term','int_rate','employment_length'] # list of strings of columns with a small amount of null values 
    columns_to_drop_null_value_rows = ['last_payment_date', 
                                       'last_credit_pull_date', 
-                                      'collections_12_mths_ex_med'] # list of strings of columns with < 1% null values, can drop rows with null values 
+                                      'collections_12_mths_ex_med'] # list of strings of columns with < 1% null values 
 
-   loan_payments_df_copy = loan_payments_df.copy() #create copy of dataframe before removing any values for data preservation
+   loan_payments_df_copy = loan_payments_df.copy() #create copy of df before removing any values for data preservation
 
    remove_null_instance = DataFrameTransform(loan_payments_df_copy) # initialises an instance of the DataFrameTransform class for dealing with null values 
    for i in range(0, len(columns_to_drop)):
@@ -203,7 +203,7 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
    for i in range(0, len(columns_to_drop_null_value_rows)):
       loan_payments_df_copy = remove_null_instance.drop_null_rows(columns_to_drop_null_value_rows[i]) # drops rows with null values in specific columns
    
-   df_info_instance = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class to obtain information on the dataframe to decide how to impute remaining nulls
+   df_info_instance = DataFrameInfo(loan_payments_df_copy) # initialises an instnce of the class to get info on the df 
    
    for i in range(0, len(columns_to_impute)):
       mean = df_info_instance.get_mean(columns_to_impute[i])
@@ -261,12 +261,12 @@ if __name__ == "__main__": # guard added to ensure code below only runs when the
 
    skewed_columns_to_ignore = ['id','member_id','delinq_2yrs','inq_last_6mths','collections_12_mths_ex_med'] # skewed columns that do not need to be transformed
    for i in range(0, len(skewed_columns_to_ignore)):
-      skewed_columns.remove(skewed_columns_to_ignore[i]) # removes columns that represent IDs or are categorical data from list of skewed columns
+      skewed_columns.remove(skewed_columns_to_ignore[i]) # removes columns that represent IDs/categorical data from list of skewed columns
    #print(skewed_columns)
    zero_maj_skewed_columns_to_ignore = ['out_prncp','out_prncp_inv','total_rec_late_fee','collection_recovery_fee'] # list of columns containing a majority of 0 values
    for i in range(0, len(zero_maj_skewed_columns_to_ignore)):
-      skewed_columns.remove(zero_maj_skewed_columns_to_ignore[i]) # removes columns that contain a majority of 0 values (median =0), meaning transformations are not appropriate
-   # print(f"WOOOOOOOO{skewed_columns}")
+      skewed_columns.remove(zero_maj_skewed_columns_to_ignore[i]) # removes columns that contain a majority of 0 values, meaning transformations are not appropriate
+
    loan_payments_df_transformed = loan_payments_df_copy.copy() # create copy of transformed data with appropriate naming
 
    transform_instance = DataFrameTransform(loan_payments_df_transformed) # initialise an instance of the class with the transformed dataframe
