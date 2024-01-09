@@ -33,7 +33,7 @@ db_info.py - This file contains classes for obtaining descriptive statistics for
 db_datatransform.py - This file contains classes for transforming data types in the dataframe
 db_clean_data.py - This file contains classes for dealing with null values, skewed data, outliers, and overly correlated columns 
 db_data_analysis.py - This file contains the code for analysing the cleaned and transformed data
-db_familiarise.py - This file contains rough working and code for familiarisation with the dataset
+db_familiarise.ipynb - This file contains code for familiarisation with the dataset, used as initial rough working
 license.txt - This file contains the infromation for the license applicable to this project
 data_dictionary.md - This file is a dictionary of all the columns in the data set and what data they refer to 
 loan_payments.csv - This file is the original dataset 
