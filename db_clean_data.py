@@ -118,6 +118,13 @@ class DataFrameTransform():
       self.dataframe[column] = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
       return self.dataframe
    
+   def sqrt_transform(self, column):
+      '''
+      This function performs a square root transform on the specified column, excluding negative values
+      '''
+      self.dataframe[column] = self.dataframe[column].map(lambda i: np.sqrt(i) if i >= 0 else i)
+      return self.dataframe
+   
    def box_cox_transform(self, column):
       '''
       This function performs a box cox transformation on the specified column 
