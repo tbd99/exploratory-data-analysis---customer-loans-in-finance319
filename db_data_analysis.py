@@ -1,4 +1,5 @@
 
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -69,8 +70,6 @@ charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_rema
 total_revenue_loss = charged_off_loans_df_calc['lost_revenue'].sum()
 print(f"total loss in revenue these loans would have generated for the company  = £{total_revenue_loss.round(2)}")
 
-# Visualise the loss projected over the remaining term of these loans.
-# ?? 
 
 # calculate the percentage of users behind with loan payments 
 late_loans_1 = (loan_payments_df.loan_status == 'Late (16-30 days)').sum()   # count no of loans marked as late
