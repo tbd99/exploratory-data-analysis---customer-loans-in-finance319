@@ -37,20 +37,20 @@ Files should be run in the following order:
 
 ## File structure
 ### Core files
-db_utils.py - This file contains the code for extracting the data from the cloud into a csv file 
-db_info.py - This file contains classes for obtaining descriptive statistics for columns in the dataframe
-db_datatransform.py - This file contains classes for transforming data types in the dataframe
-db_clean_data.py - This file contains classes for dealing with null values, skewed data, outliers, and overly correlated columns 
-db_data_cleaning_and_analysis.ipynb - This is a jupyter notebook containing the code for data cleaning and transformation, EDA, and data analysis and visualisation. This is the main file for the execution of the project.
+- db_utils.py - This file contains the code for extracting the data from the cloud into a csv file
+- db_info.py - This file contains classes for obtaining descriptive statistics for columns in the dataframe
+- db_datatransform.py - This file contains classes for transforming data types in the dataframe
+- db_clean_data.py - This file contains classes for dealing with null values, skewed data, outliers, and overly correlated columns
+- db_data_cleaning_and_analysis.ipynb - This is a jupyter notebook containing the code for data cleaning and transformation, EDA, and data analysis and visualisation. This is the main file for the execution of the project.
 
 ### Supplementary files
-db_data_analysis.py - This file contains the code for analysing the cleaned and transformed data
-db_familiarise.ipynb - This file contains code for familiarisation with the dataset, used as initial rough working
-license.txt - This file contains the infromation for the license applicable to this project
-data_dictionary.md - This file is a dictionary of all the columns in the data set and what data they refer to 
-loan_payments.csv - This file is the original dataset 
-loan_payments_transformed.csv - This file contains the dataset with data transformations
-cleaned_data.pickle - This file contains the fully cleaned and transformed dataset ready for analysis 
+- db_data_analysis.py - This file contains the code for analysing the cleaned and transformed data
+- db_familiarise.ipynb - This file contains code for familiarisation with the dataset, used as initial rough working
+- license.txt - This file contains the infromation for the license applicable to this project
+- data_dictionary.md - This file is a dictionary of all the columns in the data set and what data they refer to
+- loan_payments.csv - This file is the original dataset
+- loan_payments_transformed.csv - This file contains the dataset with data transformations
+- cleaned_data.pickle - This file contains the fully cleaned and transformed dataset ready for analysis 
 
 ## License information
 License is Apache License 2.0, full details can be found in license.txt
