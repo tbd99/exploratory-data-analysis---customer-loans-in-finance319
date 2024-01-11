@@ -75,7 +75,7 @@ class DataFrameInfo():
    
     def get_range(self, column):
         '''
-        This function returns the percentage of null values in a column in the dataframe 
+        This function returns the range of values in a column in the dataframe 
         '''
         range = self.dataframe[column].max() - self.dataframe[column].min()
         return range
