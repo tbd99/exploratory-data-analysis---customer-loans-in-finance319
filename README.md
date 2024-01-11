@@ -8,6 +8,9 @@ This project will be a practical application and demonstration of the various da
 
 ## Table of contents 
 1. [Project Execution](#project-execution)
+   - [Extracting loans data from the cloud](#extracting-loans-data-from-the-cloud)
+      - [Creating the RDSDatabaseConnector class](#creating-the-rdsdatabaseconnector-class-and-functions)
+      - [Loading the data](#loading-the-data)
    - [EDA for data cleaning and preparation](#eda-for-data-cleaning-and-preparation)
    - [Data analysis and visualisation](#data-analysis-and-visualisation)
 2. [Installation Instructions](#installation-instructions)
@@ -15,8 +18,22 @@ This project will be a practical application and demonstration of the various da
 4. [File Structure](#file-structure)
 5. [License Information](#license-information)
 
-## Project execution 
-### EDA for data cleaning and preparation
+# Project execution 
+## Extracting loans data from the cloud
+- The loan payment data that is being analysed is stored in an AWS RDS database in the cloud
+- Python classes are created in order to extract this data from the database and save it locally as a pandas DataFrame, enabling analysis
+### Creating the RDSDatabaseConnector class and functions
+- The functions load_yaml and save_to_csv are created for data loading and saving
+- The RDSDatabaseConnector class is created to extract the loans data from an AWS RDS database
+- The SQLAlchemy_initialiser function is created within the class, this function intiialises a SQLAlchemy engine using the provided credentials and returns the engine
+- The extract_to_pandas function is created within the class, this function reads data from the RDS database and returns it as a pandas DataFrame
+### Loading the data 
+- Credentials are loaded from a yaml file with the defined load_yaml function, database credentials are added to the .gitignore file in order to maintain security
+- An instance of the RDSDatabaseConnector class is intiailised and the SQLAlchemy_initialiser method is called to initialise an engine
+- A connection is initilised to the RDS database and the RDS data is loaded to a pandas DataFrame using the extract_to_pandas function
+- The resulting dataframe is saved to a .csv file using the save_to_csv function and the connection to the RDS database is closed
+
+## EDA for data cleaning and preparation
 Columns in the dataframe are converted to the correct type
 Missing/null values are handled on a case-by-case basis, and are either dropped, imputed or the whole variable is removed
 Skewed columns are identified and handled by transformation
