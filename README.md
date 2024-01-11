@@ -4,7 +4,9 @@ Perform exploratory data analysis on the loan portfolio, using various statistic
 ## Project description
 The aim of this project is to gain a comprehensive understanding of the loan portfolio data of a large financial instiution by performing exploratory data analysis (EDA) using various statistical and data visualistion methods, demonstrating a strong understanding and knowledge of these techniques. This will enable patterns, relationships and anomalies in the data to be revealed, thereby facilitating the improvement of the the performance and profitability of the loan portfolio. 
 
-This project will be a practical application and demonstration of the various data analysis skills developed in the AiCore data analysis course.
+This project will be a practical application and demonstration of the various data analysis skills developed in the AiCore data analysis immersive program.
+
+Data is loaded from an AWS RDS database, EDA and transformations are performed to investigate the data and clean the data. This allows deeper insights to be derived from the prepared data, providing valuable context for business decisions and revealing indicators of loss.
 
 ## Table of contents 
 1. [Project Execution](#project-execution)
@@ -529,6 +531,7 @@ Files should be run in the following order:
 - loan_payments.csv - This file is the original dataset
 - loan_payments_transformed.csv - This file contains the dataset with data transformations
 - cleaned_data.pickle - This file contains the fully cleaned and transformed dataset ready for analysis 
+- EDA_plot -  This folder contains screenshots of figures for illustration in the README
 
 ## License information
 License is Apache License 2.0, full details can be found in license.txt
