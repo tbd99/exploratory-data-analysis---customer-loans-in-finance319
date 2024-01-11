@@ -15,6 +15,7 @@ This project will be a practical application and demonstration of the various da
       - [Creating the DataFrameInfo class and functions](#creating-the-dataframeinfo-class-and-functions)
       - [Creating the DataTransform class and functions](#creating-the-datatransform-class-and-functions)
       - [Creating the Plotter class and functions](#creating-the-plotter-class-and-functions)
+      - [Creating the DataFrameTransform class and functions](#creating-the-dataframetransform-class-and-functions)
    - [Data analysis and visualisation](#data-analysis-and-visualisation)
 2. [Installation Instructions](#installation-instructions)
 3. [Usage Instructions](#usage-instructions)
@@ -30,6 +31,33 @@ This project will be a practical application and demonstration of the various da
 - The RDSDatabaseConnector class is created to extract the loans data from an AWS RDS database
 - The SQLAlchemy_initialiser function is created within the class, this function intiialises a SQLAlchemy engine using the provided credentials and returns the engine
 - The extract_to_pandas function is created within the class, this function reads data from the RDS database and returns it as a pandas DataFrame
+    class RDSDatabaseConnector():
+    '''
+    This class contains the methods used to extract data from the RDS
+    '''
+    def __init__(self, credentials_dict):
+       self.credentials = credentials_dict
+    
+    def SQLAlchemy_initialiser(self):
+       '''
+       This function initialises a SQLAlchemy engine
+       The provided credentials are used to initialise the engine, which is returned
+       '''
+       DATABASE_TYPE = 'postgresql'
+       HOST = self.credentials['RDS_HOST']
+       USER = self.credentials['RDS_USER']
+       PASSWORD = self.credentials['RDS_PASSWORD']
+       DATABASE = self.credentials['RDS_DATABASE']
+       PORT = self.credentials['RDS_PORT']
+       engine = create_engine(f"{DATABASE_TYPE}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}") # creates engine from credentials provided  
+       return engine
+    
+    def extract_to_pandas(self,engine, table_name):
+       '''
+       This function extracts data from the RDS database, returning a pandas DataFrame
+       '''
+       df = pd.read_sql_table(table_name, engine)
+       return df
 ### Loading the data 
 - Credentials are loaded from a yaml file with the defined load_yaml function, database credentials are added to the .gitignore file in order to maintain security
 - An instance of the RDSDatabaseConnector class is intiailised and the SQLAlchemy_initialiser method is called to initialise an engine
