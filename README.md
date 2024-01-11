@@ -369,7 +369,7 @@ print(f"Percentage of the loans recovered against the investor funding and the t
 - EDA revealed a 1:1 correlation between out_prncp (outstanding principal) and out_prncp_inv (outstanding investor principal), percentage recovered is therefore the same for both measures
 - Results are visualised as a bar plot
 ***ADD IMAGE*** 
-![2_bar_chart](/Users/tigerdavies/Test/exploratory-data-analysis---customer-loans-in-finance319/EDA_plots/2_bar_chart.png)
+![Bar plot](EDA_plots/2_bar_chart.png)
 
 
 - The remaining balance of the loans is calculcated monthly up to 6 months in the future in order to project recovery
