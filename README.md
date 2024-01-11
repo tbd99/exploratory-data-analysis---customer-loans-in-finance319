@@ -33,17 +33,12 @@ This project will be a practical application and demonstration of the various da
 - The extract_to_pandas function is created within the class, this function reads data from the RDS database and returns it as a pandas DataFrame
     ~~~
     class RDSDatabaseConnector():
-    '''
-    This class contains the methods used to extract data from the RDS
-    '''
+
     def __init__(self, credentials_dict):
        self.credentials = credentials_dict
     
     def SQLAlchemy_initialiser(self):
-       '''
-       This function initialises a SQLAlchemy engine
-       The provided credentials are used to initialise the engine, which is returned
-       '''
+      
        DATABASE_TYPE = 'postgresql'
        HOST = self.credentials['RDS_HOST']
        USER = self.credentials['RDS_USER']
@@ -54,9 +49,7 @@ This project will be a practical application and demonstration of the various da
        return engine
     
     def extract_to_pandas(self,engine, table_name):
-       '''
-       This function extracts data from the RDS database, returning a pandas DataFrame
-       '''
+      
        df = pd.read_sql_table(table_name, engine)
        return df
     ~~~   
@@ -65,6 +58,16 @@ This project will be a practical application and demonstration of the various da
 - An instance of the RDSDatabaseConnector class is intiailised and the SQLAlchemy_initialiser method is called to initialise an engine
 - A connection is initilised to the RDS database and the RDS data is loaded to a pandas DataFrame using the extract_to_pandas function
 - The resulting dataframe is saved to a .csv file using the save_to_csv function and the connection to the RDS database is closed
+~~~
+if __name__ == "__main__": # guard 
+   credentials_dict = load_yaml(credentials_filename)
+   my_instance = RDSDatabaseConnector(credentials_dict) # initialises an instance of the RDSDatabaseConnector class 
+   my_engine = my_instance.SQLAlchemy_initialiser() # calls the SQLAlchemy_initialiser method to initialise an engine
+   conn = my_engine.connect() # intialises connection to RDS database
+   loan_payments_df = my_instance.extract_to_pandas(my_engine, table_name) # load RDS data to pd DataFrame
+   save_to_csv(loan_payments_df,csv_file_name) # save dataframe data to local machine
+   conn.close() # closes connection to RDS database
+~~~
 
 ## Exploratory data analysis (EDA) and data cleaning 
 - Classes are created to facilitate EDA and data visualisation 
@@ -72,7 +75,7 @@ This project will be a practical application and demonstration of the various da
 ### Creating the DataFrameInfo class and functions
 - The DataFrameInfo class is created containing functions get information and descriptive statistics from the pandas DataFrame being analysed
 - These functions are used to gain insight into the data when performing EDA and enables the identification of outliers, nulls, incorrect data types etc.
-- The following functions are created within this class:
+- The following functions are created within this class, with some example code shown below:
 - get_datatypes: returns the datatype of each column in the dataframe
 - get_uniquevals: returns the unique values a specified column in the dataframe
 - get_median: returns the median value of a specified column in the dataframe
@@ -81,8 +84,25 @@ This project will be a practical application and demonstration of the various da
 - get_mode: returns the mode value of a specified column in the dataframe
 - print_shape: prints the shape of the dataframe
 - null_percentage: returns the percentage of null values in a specified column in the dataframe
+~~~
+    def null_percentage(self, column):
+        null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
+        return null_pc
+~~~
 - get_range: returns the range of values in a specified column in the dataframe
+~~~
+def get_range(self, column):
+        range = self.dataframe[column].max() - self.dataframe[column].min()
+        return range
+~~~
 - get_normal_dist: returns the p value of the data in a specified column, giving the normal distribution
+~~~
+def get_normal_dist(self, column):
+        
+        stat, p = normaltest(self.dataframe[column], nan_policy='omit')
+        print('Statistics=%.3f, p=%.3f' % (stat, p))
+        return stat, p
+~~~
 ### Creating the DataTransform class and functions
 - The DataTransform class is created containing functions to transform data types in the pandas DataFrame 
 - These functions are used to convert columns to a more appropriate format to facilitate analysis and visualisation
