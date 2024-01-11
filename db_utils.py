@@ -51,7 +51,7 @@ credentials_filename = 'credentials.yaml' # data type str
 table_name = 'loan_payments'  # data type str
 csv_file_name = 'loan_payments.csv' # data type str
 
-if __name__ == "__main__": # guard added to ensure the game only runs when the script is executed directly 
+if __name__ == "__main__": # guard to ensure the file only runs when the script is executed directly 
    credentials_dict = load_yaml(credentials_filename) 
    my_instance = RDSDatabaseConnector(credentials_dict) # initialises an instance of the RDSDatabaseConnector class 
    my_engine = my_instance.SQLAlchemy_initialiser() # calls the SQLAlchemy_initialiser method to initialise an engine
