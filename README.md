@@ -350,9 +350,32 @@ transformed_plotter_instance.plot_corr_matrix() # visualise correlated columns
 ~~~
 loan_payments_df_transformed.to_pickle('cleaned_data.pickle')
 ~~~
-### Data analysis and visualisation
-Analysis is then performed on the transformed and cleaned data to uncover relationships and information about the state of the loans and future projections
+## Data analysis and visualisation
+- Analysis is then performed on the transformed and cleaned data to uncover relationships and information about the state of the loans and future projections to gain deeper insights into the data, enabling informed business decisions
+- The data is queried to evaluate the current state of the loans and payments and visualise future projections
+### Summarise the % of loans recovered against investor/total funding and visualise projected recovery up to 6 months in the future 
+- The company wants to check what percentage of loans have been a loss to the company, loans marked as 'Charged Off' in the loan_status column represent a loss to the company.
+- Recovered loans are defined as those where the outstanding principal is 0, percentage is calculated as a percentage of total loans issued
+~~~
+out_prncp_zeros = (loan_payments_df.out_prncp == 0.00).sum()  
+loans_recov_against_total_funding = (out_prncp_zeros/(len(loan_payments_df)))*100
+print(f"Percentage of the loans recovered against the investor funding and the total amount funded = {loans_recov_against_total_funding.round(2)} %")
+~~~
+- EDA revealed a 1:1 correlation between out_prncp (outstanding principal) and out_prncp_inv (outstanding investor principal), percentage recovered is therefore the same for both measures
+- Results are visualised as a bar plot
+![2_bar_chart](/Users/tigerdavies/Test/EDA_plots/2_bar_chart.png)
 
+- The remaining balance of the loans is calculcated monthly up to 6 months in the future in order to project recovery
+- The monthly installment is subtracted from the remaining balance to calculcate the remaining balance for each month
+- The remaining balance is summed for each month to calculate the percentage recovery as month1_pc, month2_pc etc.
+- This projection is visualised with a scatter plot
+~~~
+month_no = [1,2,3,4,5,6]
+loans_recovered_pc = [month1_pc, month2_pc, month3_pc, month4_pc, month5_pc, month6_pc]
+recovery_df = pd.DataFrame({'Month': month_no,'Recovery_percentage': loans_recovered_pc}) # create df to plot data 
+fig2 = plt.figure(2)
+sns.scatterplot(data=recovery_df, x='Month', y='Recovery_percentage') # scatter plot of data to visualise projection
+~~~
 ## Installation instructions
 Code was created using Python 3.11.4
 The following libraries are used: datetime, matplotlib.pyplot, numpy, pyplot, pandas, pickle, plotly.express, scipy.stats, seaborn, sqlalchemy, yaml
