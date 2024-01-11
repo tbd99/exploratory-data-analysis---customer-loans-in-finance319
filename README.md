@@ -368,9 +368,8 @@ print(f"Percentage of the loans recovered against the investor funding and the t
 ~~~
 - EDA revealed a 1:1 correlation between out_prncp (outstanding principal) and out_prncp_inv (outstanding investor principal), percentage recovered is therefore the same for both measures
 - Results are visualised as a bar plot
-***ADD IMAGE*** 
-![Bar plot](EDA_plots/2_bar_chart.png)
 
+![Bar plot](EDA_plots/2_bar_chart.png)
 
 - The remaining balance of the loans is calculcated monthly up to 6 months in the future in order to project recovery
 - The monthly installment is subtracted from the remaining balance to calculcate the remaining balance for each month
@@ -383,7 +382,7 @@ recovery_df = pd.DataFrame({'Month': month_no,'Recovery_percentage': loans_recov
 fig2 = plt.figure(2)
 sns.scatterplot(data=recovery_df, x='Month', y='Recovery_percentage') # scatter plot of data to visualise projection
 ~~~
-***ADD IMAGE*** 
+![Scatter plot](EDA_plots/2_scatter_plot.png)
 
 ### Calculate the percentage of charged off loans, the amount paid towards these loans before being charged off and the loss in revenue generated if these loans finished their term
 - Charged off loans represent a loss to the company, the % of loans marked as charged off is calculated using the loan_status categorisation
@@ -490,9 +489,14 @@ print(original_mean_last_payment_amount, stopped_paying_mean_last_payment_amount
 ~~~
 - Last payments amount is lower for late payments and charged off payments, suggests lower last payment amount is an indicator of not paying back/paying late. Distribution visualised by the KDE plots shown below also supports this conclusion
 
-***ADD IMAGE***
-***ADD IMAGE***
-***ADD IMAGE***
+- The figure below shows the last payment KDE plot for the entire dataset
+![last payment all](EDA_plots/3_last_payment_all.png)
+
+- The figure below shows the last payment KDE plot for customers who are not paying
+![last payment not paying](EDA_plots/3_last_payment_not_pay.png)
+
+- The figure below shows the last payment KDE plot for customers who are late paying
+![last payment late paying](EDA_plots/3_last_payment_late_pay.png)
 
 - The following columns are suggested as loss indicators
 - Remaining amount of the loan (out_prncp): those with late payments have a higher average remaining principal
