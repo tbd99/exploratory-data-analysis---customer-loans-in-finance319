@@ -79,28 +79,28 @@ if __name__ == "__main__": # guard
 - The DataFrameInfo class is created containing functions get information and descriptive statistics from the pandas DataFrame being analysed
 - These functions are used to gain insight into the data when performing EDA and enables the identification of outliers, nulls, incorrect data types etc.
 - The following functions are created within this class, with some example code shown below:
-- get_datatypes: returns the datatype of each column in the dataframe
-- get_uniquevals: returns the unique values a specified column in the dataframe
-- get_median: returns the median value of a specified column in the dataframe
-- get_stdev: returns the standard deviation value of a specified column in the dataframe
-- get_mean: returns the mean value of a specified column in the dataframe
-- get_mode: returns the mode value of a specified column in the dataframe
-- print_shape: prints the shape of the dataframe
-- null_percentage: returns the percentage of null values in a specified column in the dataframe
+- get_datatypes: returns the datatype of each column in the dataframe using df.dtypes 
+- get_uniquevals: returns the unique values a specified column in the dataframe using the .unique() method
+- get_median: returns the median value of a specified column in the dataframe using the .median() method
+- get_stdev: returns the standard deviation value of a specified column in the dataframe using the .std() method
+- get_mean: returns the mean value of a specified column in the dataframe using np.mean
+- get_mode: returns the mode value of a specified column in the dataframe using the .mode() method
+- print_shape: prints the shape of the dataframe using df.shape
+- null_percentage: returns the percentage of null values in a specified column in the dataframe using the .isnull() method
 ~~~
 def null_percentage(self, column):
 
     null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
     return null_pc
 ~~~
-- get_range: returns the range of values in a specified column in the dataframe
+- get_range: returns the range of values in a specified column in the dataframe using .min() and .max() methods
 ~~~
 def get_range(self, column):
 
     range = self.dataframe[column].max() - self.dataframe[column].min()
     return range
 ~~~
-- get_normal_dist: returns the p value of the data in a specified column, giving the normal distribution
+- get_normal_dist: returns the p value of the data in a specified column, giving the normal distribution using normaltest
 ~~~
 def get_normal_dist(self, column):
         
@@ -113,14 +113,14 @@ def get_normal_dist(self, column):
 - The DataTransform class is created containing functions to transform data types in the pandas DataFrame 
 - These functions are used to convert columns to a more appropriate format to facilitate analysis and visualisation
 - The following functions are created within this class:
-- obj_to_datetime: this function converts obj/str datatype to datetime, a dataframe column is specified to be converted from str to datetime, the specific column and datetime format are arguments of the function. The dataframe is returned.
+- obj_to_datetime: this function converts obj/str datatype to datetime, a dataframe column is specified to be converted from str to datetime using pd.to_datetime, the specific column and datetime format are arguments of the function. The dataframe is returned.
 ~~~
 def obj_to_datetime(self, column_name, datetime_format):
     
     self.dataframe[column_name] = pd.to_datetime(self.dataframe[column_name], format = datetime_format) 
     return self.dataframe 
 ~~~
-- obj_to_int: this function converts obj datatype to float, a dataframe column is specified to be converted from obj to float, the text is split to only obtain numerical values, which are then converted to float. Float type is chosen over int as it can accomoate NaN/null values in conversion. The dataframe is returned.
+- obj_to_int: this function converts obj datatype to float, a dataframe column is specified to be converted from obj to float, the text is split to only obtain numerical values, which are then converted to float using pd.to_numeric. Float type is chosen over int as it can accomoate NaN/null values in conversion. The dataframe is returned.
 ~~~
 def obj_to_int(self, column_name):
 
@@ -128,14 +128,14 @@ def obj_to_int(self, column_name):
     self.dataframe[column_name] = pd.to_numeric(self.dataframe[column_name])
     return self.dataframe
 ~~~
-- obj_to_str: this function converts obj datatype to string, a dataframe column is specified to be converted from obj to string. The dataframe is returned.
+- obj_to_str: this function converts obj datatype to string, a dataframe column is specified to be converted from obj to string using df.astype(). The dataframe is returned.
 ~~~
 def obj_to_str(self, column_name):
 
     self.dataframe[column_name] = (self.dataframe[column_name]).astype('string')
     return self.dataframe
 ~~~
-- obj_to_cat: this function converts obj datatype to categorical, a dataframe column is specified to be converted from obj to categorical. The dataframe is returned.
+- obj_to_cat: this function converts obj datatype to categorical, a dataframe column is specified to be converted from obj to categorical using df.astype(). The dataframe is returned.
 ~~~
 def obj_to_cat(self, column_name):
 
@@ -144,7 +144,8 @@ def obj_to_cat(self, column_name):
 ~~~
 
 ### Creating the Plotter class and functions
-- The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers 
+- The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers
+- seaborn, plotly, and maplotlib libraries are used to create visualisation functions
 - The following functions are created within this class, with some example code shown below::
 - plot_hist: plots a histogram of the specified column of the dataframe
 - plot_KDE: plots a kernel density estimation (KDE) plot of the specified column of the dataframe
@@ -174,18 +175,79 @@ def plot_countplot(self,column):
 ### Creating the DataFrameTransform class and functions
 - The DataFrameTransform class is created containing functions for data transformation, this enables data cleaning and transformations
 - The following functions are created within this class:
-- drop_column: drops the specified column from the dataframe
-- drop_null_rows: deletes all rows containing null values in the specified column
-- impute_na_with_mean: replaces null values in a specified column with the mean of the column
-- impute_na_with_mode: replaces null values in a specified column with the mode of the column
-- impute_na_with_median: replaces null values in a specified column with the median of the column
-- log_transform: performs a log transform on the data in the specified column, excluding 0 values
-- sqrt_transform: performs a square root transform on the data in the specified column, excluding negative values
-- cubrt_transform: performs a cube root transform on data in the the specified column
-- box_cox_transform: performs a cube root transform on data in the specified column
-- yeo_johnson_transform: performs a yeo-johnson transformation on data in the specified column
-- remove_top_val: drops the entire dataframe row corresponding to the maximum value for the specified column
+- drop_column: drops the specified column from the dataframe using df.drop()
+~~~
+def drop_column(self, column):
+
+    self.dataframe = self.dataframe.drop(column, axis =1)
+    return self.dataframe
+~~~
+- drop_null_rows: deletes all rows containing null values in the specified column using df.dropna()
+~~~
+def drop_null_rows(self, column):
+
+    self.dataframe = self.dataframe.dropna(subset=[column])
+    return self.dataframe
+~~~
+- impute_na_with_mean: replaces null values in a specified column with the mean of the column using df.fillna()
+- impute_na_with_mode: replaces null values in a specified column with the mode of the column using df.fillna()
+- impute_na_with_median: replaces null values in a specified column with the median of the column using df.fillna()
+~~~
+def impute_na_with_median(self, column):
+
+    self.dataframe[column] = self.dataframe[column].fillna(self.dataframe[column].median())
+    return self.dataframe
+~~~
+- log_transform: performs a log transform on the data in the specified column using a map function, excluding 0 values
+~~~
+def log_transform(self, column):
+
+    self.dataframe[column] = self.dataframe[column].map(lambda i: np.log(i) if i > 0 else 0)
+    return self.dataframe
+~~~
+- sqrt_transform: performs a square root transform on the data in the specified column using a map function, excluding negative values
+~~~
+def sqrt_transform(self, column):
+
+    self.dataframe[column] = self.dataframe[column].map(lambda i: np.sqrt(i) if i >= 0 else i)
+    return self.dataframe
+~~~
+- cubrt_transform: performs a cube root transform on data in the the specified column using a map function
+~~~
+def cubrt_transform(self, column):
+
+    self.dataframe[column] = self.dataframe[column].map(lambda i: np.cbrt(i))
+    return self.dataframe
+~~~
+- box_cox_transform: performs a cube root transform on data in the specified column using the inbuilt stats.boxcox
+~~~
+def box_cox_transform(self, column):
+
+    self.dataframe[column] = pd.Series((stats.boxcox(self.dataframe[column]))[0]) 
+    return self.dataframe
+~~~
+- yeo_johnson_transform: performs a yeo-johnson transformation on data in the specified column using the inbuilt stats.yeojohnson
+~~~
+def yeo_johnson_transform(self, column):
+
+    self.dataframe[column] = pd.Series((stats.yeojohnson(self.dataframe[column]))[0])
+    return self.dataframe
+~~~
+- remove_top_val: drops the entire dataframe row corresponding to the maximum value for the specified column using df.drop()
+~~~
+def remove_top_val(self, column):
+
+    max_val = self.dataframe[column].max()
+    self.dataframe = self.dataframe.drop(self.dataframe[self.dataframe[column] == max_val].index)
+    return self.dataframe
+~~~
 - remove_negatives: drops the entire dataframe row corresponding to negative values in the specified column
+~~~
+def remove_negatives(self, column):
+
+    self.dataframe = self.dataframe[self.dataframe[column] >= 0]
+    return self.dataframe
+~~~
 ### Converting columns to the correct format
 ### Handling null values
 ### Identification of skewed columns
