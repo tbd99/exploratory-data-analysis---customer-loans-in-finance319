@@ -14,6 +14,7 @@ This project will be a practical application and demonstration of the various da
    - [Exploratory data analysis (EDA) and data cleaning ](#exploratory-data-analysis-eda-and-data-cleaning)
       - [Creating the DataFrameInfo class and functions](#creating-the-dataframeinfo-class-and-functions)
       - [Creating the DataTransform class and functions](#creating-the-datatransform-class-and-functions)
+      - [Creating the Plotter class and functions](#creating-the-plotter-class-and-functions)
    - [Data analysis and visualisation](#data-analysis-and-visualisation)
 2. [Installation Instructions](#installation-instructions)
 3. [Usage Instructions](#usage-instructions)
@@ -60,13 +61,20 @@ This project will be a practical application and demonstration of the various da
 - obj_to_int: this function converts obj datatype to float, a dataframe column is specified to be converted from obj to float, the text is split to only obtain numerical values, which are then converted to float. Float type is chosen over int as it can accomoate NaN/null values in conversion. The dataframe is returned.
 - obj_to_str: this function converts obj datatype to string, a dataframe column is specified to be converted from obj to string. The dataframe is returned.
 - obj_to_cat: this function converts obj datatype to categorical, a dataframe column is specified to be converted from obj to categorical. The dataframe is returned.
-
+### Creating the Plotter class and functions
+- The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers 
+- The following functions are created within this class:
+- plot_hist: plots a histogram of the specified column of the dataframe
+- plot_KDE: plots a kernel density estimation (KDE) plot of the specified column of the dataframe
+- plot_box_whiskers: plots a box and whiskers plot of the specified column of the dataframe
+- plot_corr_matrix: plots a correlation heatmap of the dataframe for columns containing numeric values only 
+- plot_bar_chart: plots a bar chart for a given dataset and specified axes
+- plot_countplot: plots a count plot of the specified column of the dataframe
 
 
 
 
 ### Creating the DataFrameTransform class and functions
-### Creating the Plotter class and functions
 ### Converting columns to the correct format
 ### Handling null values
 ### Identification of skewed columns
