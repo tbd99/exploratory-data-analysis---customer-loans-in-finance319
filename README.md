@@ -31,6 +31,7 @@ This project will be a practical application and demonstration of the various da
 - The RDSDatabaseConnector class is created to extract the loans data from an AWS RDS database
 - The SQLAlchemy_initialiser function is created within the class, this function intiialises a SQLAlchemy engine using the provided credentials and returns the engine
 - The extract_to_pandas function is created within the class, this function reads data from the RDS database and returns it as a pandas DataFrame
+    ~~~
     class RDSDatabaseConnector():
     '''
     This class contains the methods used to extract data from the RDS
@@ -58,6 +59,7 @@ This project will be a practical application and demonstration of the various da
        '''
        df = pd.read_sql_table(table_name, engine)
        return df
+    ~~~   
 ### Loading the data 
 - Credentials are loaded from a yaml file with the defined load_yaml function, database credentials are added to the .gitignore file in order to maintain security
 - An instance of the RDSDatabaseConnector class is intiailised and the SQLAlchemy_initialiser method is called to initialise an engine
