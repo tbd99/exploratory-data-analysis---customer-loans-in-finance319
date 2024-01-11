@@ -472,20 +472,25 @@ late_payments_df_info = DataFrameInfo(loan_payments_df_late_payments)
 ~~~
 - Possible loss indicators are visualised and data for each subset of data is compared to identify possible indicators
 - Descriptive statistics are also calculated to compare values such as the mean value across each subset to identify patterns
-- For example, to investigate total_rec_late_fee, the late fees recieved for each user
+- For example, to investigate last_payment_amount as a possible indicator
 ~~~
-fig15 = plt.figure(15)
-original_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for all data
-fig16 = plt.figure(16)
-stopped_paying_df_plotter.plot_KDE('total_rec_late_fee')  # visualise distribution for customers who are not paying
-fig17 = plt.figure(17)
-late_payments_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for customers who are late paying
-original_mean_total_rec_late_fee = original_df_info.get_mean('total_rec_late_fee') # caluclate mean for all data
-stopped_paying_mean_total_rec_late_fee = stopped_paying_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are not paying
-late_payment_mean_total_rec_late_fee = late_payments_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are late paying
-print(original_mean_total_rec_late_fee, stopped_paying_mean_total_rec_late_fee, late_payment_mean_total_rec_late_fee) 
-# higher average total late fees for those with late payments or charged off payments, suggests this is an indicator 
+fig19 = plt.figure(19)
+original_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for all data
+fig20 = plt.figure(20)
+stopped_paying_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for customers who are not paying
+fig21 = plt.figure(21)
+late_payments_df_plotter.plot_KDE('last_payment_amount') # visualise distribution for customers who are late paying
+original_mean_last_payment_amount = original_df_info.get_mean('last_payment_amount') # caluclate mean for all data
+stopped_paying_mean_last_payment_amount = stopped_paying_df_info.get_mean('last_payment_amount') # calcualte mean for customers who are not paying
+late_payment_mean_last_payment_amount= late_payments_df_info.get_mean('last_payment_amount') # calcualte mean for customers who are late paying
+print(original_mean_last_payment_amount, stopped_paying_mean_last_payment_amount, late_payment_mean_last_payment_amount)
 ~~~
+- Last payments amount is lower for late payments and charged off payments, suggests lower last payment amount is an indicator of not paying back/paying late. Distribution visualised by the KDE plots shown below also supports this conclusion
+
+***ADD IMAGE***
+***ADD IMAGE***
+***ADD IMAGE***
+
 - The following columns are suggested as loss indicators
 - Remaining amount of the loan (out_prncp): those with late payments have a higher average remaining principal
 - Late fees recieved (total_rec_late_fee): those with late payments or charged off loans have a higher average total late fees
