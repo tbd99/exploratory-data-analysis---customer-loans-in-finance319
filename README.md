@@ -26,6 +26,8 @@ This project will be a practical application and demonstration of the various da
       - [Loan recovery and recovery projection](#summarise-the--of-loans-recovered-against-investortotal-funding-and-visualise-projected-recovery-up-to-6-months-in-the-future)
       - [Charged off loan losses](#calculate-the-percentage-of-charged-off-loans-the-amount-paid-towards-these-loans-before-being-charged-off-and-the-loss-in-revenue-generated-if-these-loans-finished-their-term)
       - [Users behind with loan payments](#calculate-the--of-users-behind-with-loan-payments-the-loss-to-the-company-if-loan-status-of-these-users-was-changed-to-charged-off-and-the-projected-loss-if-these-customers-were-to-finish-their-full-loan-term)
+      - [Users behind with payments changed to charged off](#if-customers-late-on-payments-converted-to-charged-off-what-percentage-of-total-expected-revenue-do-these-customers-and-the-customers-who-have-already-defaulted-on-their-loan-represent)
+      - [Visualising loss indicators](#visualise-data-to-examine-possible-loss-indicators)
 2. [Installation Instructions](#installation-instructions)
 3. [Usage Instructions](#usage-instructions)
 4. [File Structure](#file-structure)
@@ -452,7 +454,7 @@ total_revenue_pc = (monthly_revenue_late_customers/total_monthly_revenue)*100
 print(f"total percentage of total expected revenue from late and stopped payments  = {total_revenue_pc.round(2)} %")
 ~~~
 ### Visualise data to examine possible loss indicators
-- The data is visualised to determine ossible indicators that suggest that a customer will be unable to pay their loan, leading to losses for the company
+- The data is visualised to determine possible indicators that suggest that a customer will be unable to pay their loan, leading to losses for the company
 - Subsets of the data are created, a subset containing those late on loan payments, and another subset containing those with charged off loans who are no longer paying. This enables comparison between categories of users
 ~~~
 loan_payments_df_stopped_paying = loan_payments_df.loc[loan_payments_df['loan_status']=='Charged Off'] # subset containing customers who have stopped paying
@@ -468,9 +470,30 @@ original_df_info = DataFrameInfo(loan_payments_df)
 stopped_paying_df_info = DataFrameInfo(loan_payments_df_stopped_paying)
 late_payments_df_info = DataFrameInfo(loan_payments_df_late_payments)
 ~~~
+- Possible loss indicators are visualised and data for each subset of data is compared to identify possible indicators
+- Descriptive statistics are also calculated to compare values such as the mean value across each subset to identify patterns
+- For example, to investigate total_rec_late_fee, the late fees recieved for each user
+~~~
+fig15 = plt.figure(15)
+original_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for all data
+fig16 = plt.figure(16)
+stopped_paying_df_plotter.plot_KDE('total_rec_late_fee')  # visualise distribution for customers who are not paying
+fig17 = plt.figure(17)
+late_payments_df_plotter.plot_KDE('total_rec_late_fee') # visualise distribution for customers who are late paying
+original_mean_total_rec_late_fee = original_df_info.get_mean('total_rec_late_fee') # caluclate mean for all data
+stopped_paying_mean_total_rec_late_fee = stopped_paying_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are not paying
+late_payment_mean_total_rec_late_fee = late_payments_df_info.get_mean('total_rec_late_fee') # calcualte mean for customers who are late paying
+print(original_mean_total_rec_late_fee, stopped_paying_mean_total_rec_late_fee, late_payment_mean_total_rec_late_fee) 
+# higher average total late fees for those with late payments or charged off payments, suggests this is an indicator 
+~~~
+- The following columns are suggested as loss indicators
+- Remaining amount of the loan (out_prncp): those with late payments have a higher average remaining principal
+- Late fees recieved (total_rec_late_fee): those with late payments or charged off loans have a higher average total late fees
+- Interest paid (total_rec_int): those with late payments have a higher average total interest paid
+- Last payment amount (lsat_payment_amount): those with late payments or charged off loans have a lower average last payment amount
 
 ## Installation instructions
-Code was created using Python 3.11.4
+Code was created using Python 3.11.4\
 The following libraries are used: datetime, matplotlib.pyplot, numpy, pyplot, pandas, pickle, plotly.express, scipy.stats, seaborn, sqlalchemy, yaml
 
 ## Usage instructions 
