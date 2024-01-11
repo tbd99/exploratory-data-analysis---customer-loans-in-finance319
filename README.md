@@ -16,6 +16,12 @@ This project will be a practical application and demonstration of the various da
       - [Creating the DataTransform class and functions](#creating-the-datatransform-class-and-functions)
       - [Creating the Plotter class and functions](#creating-the-plotter-class-and-functions)
       - [Creating the DataFrameTransform class and functions](#creating-the-dataframetransform-class-and-functions)
+      - [Converting columns to the correct format](#converting-columns-to-the-correct-format)
+      - [Handling null values](#handling-null-values)
+      - [Identification of skewed columns](#identification-of-skewed-columns)
+      - [Handling of outliers](#handling-of-outliers)
+      - [Identification of overly correlated columns](#identification-of-overly-correlated-columns)
+      - [Saving the cleaned data](#saving-the-cleaned-data)
    - [Data analysis and visualisation](#data-analysis-and-visualisation)
 2. [Installation Instructions](#installation-instructions)
 3. [Usage Instructions](#usage-instructions)
@@ -72,8 +78,8 @@ if __name__ == "__main__": # guard
 ~~~
 
 ## Exploratory data analysis (EDA) and data cleaning 
-- Classes are created to facilitate EDA and data visualisation 
-- Data is then cleaned and transformed after undergoing EDA
+- Several classes are created to facilitate EDA and data visualisation, including handling nulls, outliers, skewed data, correlated columns and incorrect data types
+- Data is cleaned and transformed to prepare for final analysis and visualisation for presentation of results
 
 ### Creating the DataFrameInfo class and functions
 - The DataFrameInfo class is created containing functions get information and descriptive statistics from the pandas DataFrame being analysed
@@ -146,7 +152,7 @@ def obj_to_cat(self, column_name):
 ### Creating the Plotter class and functions
 - The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers
 - seaborn, plotly, and maplotlib libraries are used to create visualisation functions
-- The following functions are created within this class, with some example code shown below::
+- The following functions are created within this class, with some example code shown below:
 - plot_hist: plots a histogram of the specified column of the dataframe
 - plot_KDE: plots a kernel density estimation (KDE) plot of the specified column of the dataframe
 - plot_box_whiskers: plots a box and whiskers plot of the specified column of the dataframe
@@ -249,16 +255,101 @@ def remove_negatives(self, column):
     return self.dataframe
 ~~~
 ### Converting columns to the correct format
+- Methods in the DataFrameInfo class are employed to identify the data types of each column and investigate whether these are the most appropriate data types
+- Columns that are the wrong data type are identified and transformed to the correct type using the DataTransform class methods
+- For example, 'issue_date', 'earliest_credit_line', 'last_payment_date','next_payment_date', and 'last_credit_pull_date' were all loaded in string format, and will be converted to datetime type to enable timedelta calculations  
+- Columns to be converted to a specific type are appended to a list, and data transformation is achieved by applying the applying DataTransform method to all elements of the list as shown below
+~~~
+col_to_convert_to_datetime = ['issue_date', 
+                                 'earliest_credit_line', 
+                                 'last_payment_date',
+                                 'next_payment_date', 
+                                 'last_credit_pull_date'] # list of strings specifying columns to be converted
+for i in range(0,len(col_to_convert_to_datetime)): # loops over list of column names
+       datetime_format = '%b-%Y'
+       data_transform_instance.obj_to_datetime(col_to_convert_to_datetime[i],datetime_format) # calls obj_to_datetime method
+~~~
 ### Handling null values
+- Null values are identified in each column using the null_percentage method of the DataFrameInfo class
+- The null percentage of each column containing nulls is printed and nulls are handled based on this percentage
+~~~
+nulls_info_instance = DataFrameInfo(loan_payments_df) # initialises an instnce of the class to obtain information on the dataframe
+null_columns = [] # initialise list of null columns
+for i in range (0, len(column_names)):
+    null_pc = nulls_info_instance.null_percentage(column_names[i])
+    print(column_names[i], null_pc)
+    if null_pc > 0.0:
+        null_columns.append(column_names[i]) # append to list of columns if there are any null values 
+print(null_columns)
+~~~
+- Columns with a high percentage of null values (>50%) are dropped entirely as imputation is not appopriate and dropping null rows would lead to excessive data loss. Columns of this cateogry are appended to a list of strings 'columns_to_drop'
+- Columns with a very small amount (<1%) of null values will have rows containing null values dropped, this can be safely done without incurring data loss as the percentage of nulls is very small. Columns of this cateogry are appended to a list of strings 'columns_to_drop_null_value_rows'
+~~~
+for i in range(0, len(columns_to_drop)):
+      loan_payments_df_copy = remove_null_instance.drop_column(columns_to_drop[i]) # drops columns with > 50 % null values
+for i in range(0, len(columns_to_drop_null_value_rows)):
+      loan_payments_df_copy = remove_null_instance.drop_null_rows(columns_to_drop_null_value_rows[i]) # drops
+~~~
+- Columns with a moderate amount (1<%<49) of null values will be handled by imputing values, as dropping these rows could cause information loss
+- Descriptive stastics (mean, median, mode, range, standard deviation) are calculated for these columns using methods from the DataFrameInfo class to determine if missing values are imputed by the mean, mode or median value
+- Based on these statistics, different columns are imputed individually with the most appropriate imputation method
+- For example, the 'term' column nulls are imputed with the mode value as the data in this column contains categorical data and the 'employment_length' column nulls are imputed with the median to keep all values as integers
+~~~
+loan_payments_df_copy = remove_null_instance.impute_na_with_mode('term') # impute null values with mode, as this is categorical data
+loan_payments_df_copy = remove_null_instance.impute_na_with_median('employment_length') # impute null value with median, to keep all values as whole numbers 
+loan_payments_df_copy = remove_null_instance.impute_na_with_mean('funded_amount') # impute null values with mean as data is continuous with a normal distribution 
+loan_payments_df_copy = remove_null_instance.impute_na_with_mean('int_rate') # impute null values with m
+~~~
+- Null percentages are re-calculated for each column after nulls are dropped or imputed as a sense check 
 ### Identification of skewed columns
-### Handling of outliers
-### Identification of overly correlated columns
-Columns in the dataframe are converted to the correct type
-Missing/null values are handled on a case-by-case basis, and are either dropped, imputed or the whole variable is removed
-Skewed columns are identified and handled by transformation
-Outliers are identified and removed if appropriate
-Overly correlated columns are identified and dropped
+- Skewed columns are identified through data visualisation using the KDE and histogram methods from the Plotter class
+~~~
+for i in range(0, len(column_names_copy)):
+      plotter_instance.plot_hist(column_names_copy[i])
 
+for i in range(0, len(column_names_copy)):
+      plotter_instance.plot_KDE(column_names_copy[i])
+~~~
+- The skew of each column is also assigned a numerical value calculated using statistical methods
+- Columns with a numeric skew value <-2 or >2 are defined as skewed columns and appended to a list of skewed columns
+~~~
+loan_df_skew = loan_payments_df_copy.skew(axis=0,numeric_only = True) # obtain the skew of each numeric column in the dataframe
+print(loan_df_skew)
+check_skewed_columns = loan_df_skew.index
+skewed_columns = []
+for i in range(0, len(loan_df_skew)): 
+      if loan_df_skew.iloc[i] > 2 or loan_df_skew.iloc[i] < -2: # append columns with a skew < -2 or > 2 to the list
+         skewed_columns.append(check_skewed_columns[i])
+print(skewed_columns) # show skewed columns
+~~~
+- Some skewed columns are not appropriate candidates for transformation and are removed from the list
+- This includes columns with a majority of 0 values and those containing categorical data or ID data
+- A list containing identified skewed columns is created, but no skew transformations are performed to enable querying and analysis of the data in the analysis and visualisation section
+### Handling of outliers
+- Data is visualised for each column using historgrams and KDE plots generated from the Plotter class to identify outliers
+- Several outliers that were far beyond the normal distribution of data were identified, these were removed using the remove_top_val method of the DataFrameTransform class
+~~~
+columns_with_max_outliers = ['total_rec_late_fee','open_accounts','total_accounts','collection_recovery_fee'] # list of strings of column names for columns with high values to remove
+for i in range(0, len(columns_with_max_outliers)):
+      loan_payments_df_transformed = transform_instance.remove_top_val(columns_with_max_outliers[i]) # re
+~~~
+- Negative outliers were identified in columns where context specific knowledge indicated that negative values were not logical, these were removed using the remove_negatives method of the DataFrameTransform class
+~~~
+columns_with_negatives = ['recoveries','last_payment_amount'] # list of strings of column names for columns with -ve values to remove
+for i in range(0, len(columns_with_negatives)):
+      loan_payments_df_transformed = transform_instance.remove_negatives(columns_with_negatives[i]) # remove negative values
+~~~
+### Identification of overly correlated columns
+- Overly correlated columns are identified with a correlation heatmap but no correlated columns are dropped in order to enable querying and analysis of the full dataset
+- Overly correlated columns are identified as those with a correlation heatmap value >0.9
+~~~
+transformed_plotter_instance.plot_corr_matrix() # visualise correlated columns
+~~~
+### Saving the cleaned data
+- Data cleaning has been completed and the cleaned data is saved to a pickle file to preserve data types 
+~~~
+loan_payments_df_transformed.to_pickle('cleaned_data.pickle')
+~~~
 ### Data analysis and visualisation
 Analysis is then performed on the transformed and cleaned data to uncover relationships and information about the state of the loans and future projections
 
