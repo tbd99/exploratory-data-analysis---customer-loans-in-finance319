@@ -23,6 +23,9 @@ This project will be a practical application and demonstration of the various da
       - [Identification of overly correlated columns](#identification-of-overly-correlated-columns)
       - [Saving the cleaned data](#saving-the-cleaned-data)
    - [Data analysis and visualisation](#data-analysis-and-visualisation)
+      - [Loan recovery and recovery projection](#summarise-the--of-loans-recovered-against-investortotal-funding-and-visualise-projected-recovery-up-to-6-months-in-the-future)
+      - [Charged off loan losses](#calculate-the-percentage-of-charged-off-loans-the-amount-paid-towards-these-loans-before-being-charged-off-and-the-loss-in-revenue-generated-if-these-loans-finished-their-term)
+      - [Users behind with loan payments](#calculate-the--of-users-behind-with-loan-payments-the-loss-to-the-company-if-loan-status-of-these-users-was-changed-to-charged-off-and-the-projected-loss-if-these-customers-were-to-finish-their-full-loan-term)
 2. [Installation Instructions](#installation-instructions)
 3. [Usage Instructions](#usage-instructions)
 4. [File Structure](#file-structure)
@@ -363,8 +366,7 @@ print(f"Percentage of the loans recovered against the investor funding and the t
 ~~~
 - EDA revealed a 1:1 correlation between out_prncp (outstanding principal) and out_prncp_inv (outstanding investor principal), percentage recovered is therefore the same for both measures
 - Results are visualised as a bar plot
-![2_bar_chart](/Users/tigerdavies/Test/EDA_plots/2_bar_chart.png)
-
+***ADD IMAGE*** 
 - The remaining balance of the loans is calculcated monthly up to 6 months in the future in order to project recovery
 - The monthly installment is subtracted from the remaining balance to calculcate the remaining balance for each month
 - The remaining balance is summed for each month to calculate the percentage recovery as month1_pc, month2_pc etc.
@@ -376,6 +378,97 @@ recovery_df = pd.DataFrame({'Month': month_no,'Recovery_percentage': loans_recov
 fig2 = plt.figure(2)
 sns.scatterplot(data=recovery_df, x='Month', y='Recovery_percentage') # scatter plot of data to visualise projection
 ~~~
+***ADD IMAGE*** 
+
+### Calculate the percentage of charged off loans, the amount paid towards these loans before being charged off and the loss in revenue generated if these loans finished their term
+- Charged off loans represent a loss to the company, the % of loans marked as charged off is calculated using the loan_status categorisation
+~~~
+charged_off_loans = (loan_payments_df.loan_status == 'Charged Off').sum()  
+charged_off_loans_pc = (charged_off_loans/(len(loan_payments_df)))*100
+print(f"Percentage of charged off loans historically = {charged_off_loans_pc.round(2)} %")
+~~~
+- To calculate the total amount paid towards these loans before being charged off
+- Charged off loans are identified and the amount paid towards the loans is calculated
+~~~
+charged_off_loans_df = loan_payments_df.loc[loan_payments_df['loan_status']=='Charged Off']
+total_loan_amount = charged_off_loans_df['loan_amount'].sum()
+total_amount_paid = charged_off_loans_df['total_payment'].sum()
+total_amount_paid_pc = (total_amount_paid/total_loan_amount)*100
+print(f"total amount that was paid towards these loans before being charged off = £{total_amount_paid.round(2)}")
+~~~
+- To calculate the loss in revenue generated if these loans finished their term, the time between the loan issue date and last payment date is calculated and converted to months
+- The loan payment term remaining is calculcated by subtracting the monthly payments paid so far from the term of the loan
+- The amount remaining to be paid for the loans is calculated from the remaining months on the loan term multiplied by the monthly payment, giving the total potential revenue lost from loans that have been charged off
+~~~
+time_passed = ((charged_off_loans_df['last_payment_date'] - charged_off_loans_df['issue_date'])) # calculate time passed 
+time_passed_days = time_passed.dt.days # convert to days 
+charged_off_loans_df_calc = charged_off_loans_df.copy()
+charged_off_loans_df_calc['time_passed_months'] = (time_passed_days/30.5).round() # convert to int value and divide by avg month length to get no of months
+charged_off_loans_df_calc['time_remaining'] = charged_off_loans_df_calc['term'] - charged_off_loans_df_calc['time_passed_months'] # calculate number of months left of the term
+charged_off_loans_df_calc['lost_revenue'] = charged_off_loans_df_calc['time_remaining']*charged_off_loans_df_calc['instalment'] # amount that would be paid over the remaining term
+total_revenue_loss = charged_off_loans_df_calc['lost_revenue'].sum()
+print(f"total loss in revenue these loans would have generated for the company  = £{total_revenue_loss.round(2)}")
+~~~
+
+### Calculate the % of users behind with loan payments, the loss to the company if loan status of these users was changed to charged off, and the projected loss if these customers were to finish their full loan term
+- Users behind with loan payments are categorised as Late (16-30 days) or Late (31-120 days)
+- Users with loans in these categories are counted, this value is divided by total number of loans to get a percentage value
+~~~
+late_loans_1 = (loan_payments_df.loan_status == 'Late (16-30 days)').sum()   # count no of loans marked as late
+late_loans_2 = (loan_payments_df.loan_status == 'Late (31-120 days)').sum()   # count no of loans marked as late
+late_loans_pc = ((late_loans_1 + late_loans_2)/(len(loan_payments_df)))*100 # calculate total % of late loans 
+print(f"total percentage of users behind with loan payments  = {late_loans_pc.round(2)} %")
+~~~
+- The reminaing amount owed is summed for users who are behind with loans to calcualte the potential loss in revenue if these loans were changed to charged off
+- A lambda function is used to filter the dataframe
+~~~
+late_loans_df = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)'])]) # filter df to obtain only rows with late status 
+loss_incurred = late_loans_df['out_prncp'].sum() # sum the outstanding amount for each late loan to calculate loss 
+print(f"total loss the company would incur if their status was changed to Charged Off  = £{loss_incurred.round(2)}")
+~~~
+- To callculatee the projected loss if these customers were to finish their full loan term:
+- The time between the loan issue date and last payment date is calculated and converted to months
+- The loan payment term remaining is calculcated by subtracting the monthly payments paid so far from the term of the loan
+- The remaining amount that would be paid towards the loans is calculated from the remaining months on the loan term multiplied by the monthly payment
+- The projected loss is calculated as the outstanding amount on the loans after the full payment term is completed
+~~~
+time_passed_lateloans = ((late_loans_df['last_payment_date'] - late_loans_df['issue_date'])) # calculate time passed 
+time_passed_days_lateloans = time_passed_lateloans.dt.days # convert to days 
+late_loans_df['time_passed_months'] = (time_passed_days_lateloans/30.5).round() # convert to int value and divide by avg month length to get no of months
+late_loans_df['time_remaining'] = late_loans_df['term'] - late_loans_df['time_passed_months'] # no of months left of the term
+late_loans_df['outstanding_payments'] = late_loans_df['time_remaining']*late_loans_df['instalment'] # amount paid over the remaining term
+projected_loss = late_loans_df['outstanding_payments'].sum() 
+print(f"total projected loss of these loans if the customers were to finish the full loans term  = £{projected_loss.round(2)}")
+~~~
+
+### If customers late on payments converted to Charged Off, what percentage of total expected revenue do these customers and the customers who have already defaulted on their loan represent?
+- A subset of data is created using a lambda function to filter the dataframe, including all users who are late on payments and those who have had their loans charged off
+- Monthly revenue from this subset of users is summed and divided by total monthly revenue to calculcate the percentage
+~~~
+lost_revenue_df = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)','Charged Off'])]) # filters customers who have already defaulted on loans as well as those with late payment status 
+monthly_revenue_late_customers = lost_revenue_df['instalment'].sum()
+total_monthly_revenue = loan_payments_df['instalment'].sum()
+total_revenue_pc = (monthly_revenue_late_customers/total_monthly_revenue)*100
+print(f"total percentage of total expected revenue from late and stopped payments  = {total_revenue_pc.round(2)} %")
+~~~
+### Visualise data to examine possible loss indicators
+- The data is visualised to determine ossible indicators that suggest that a customer will be unable to pay their loan, leading to losses for the company
+- Subsets of the data are created, a subset containing those late on loan payments, and another subset containing those with charged off loans who are no longer paying. This enables comparison between categories of users
+~~~
+loan_payments_df_stopped_paying = loan_payments_df.loc[loan_payments_df['loan_status']=='Charged Off'] # subset containing customers who have stopped paying
+loan_payments_df_late_payments = loan_payments_df.apply(lambda row: row[loan_payments_df['loan_status'].isin(['Late (16-30 days)','Late (31-120 days)'])]) # subset containings customers with late payments
+~~~
+- Instances of the Plotter class and DataFrameInfo class are initialised for the main dataframe and each subset of the data
+~~~
+original_df_plotter = Plotter(loan_payments_df)
+stopped_paying_df_plotter = Plotter(loan_payments_df_stopped_paying)
+late_payments_df_plotter = Plotter(loan_payments_df_late_payments)
+
+original_df_info = DataFrameInfo(loan_payments_df)
+stopped_paying_df_info = DataFrameInfo(loan_payments_df_stopped_paying)
+late_payments_df_info = DataFrameInfo(loan_payments_df_late_payments)
+~~~
+
 ## Installation instructions
 Code was created using Python 3.11.4
 The following libraries are used: datetime, matplotlib.pyplot, numpy, pyplot, pandas, pickle, plotly.express, scipy.stats, seaborn, sqlalchemy, yaml
