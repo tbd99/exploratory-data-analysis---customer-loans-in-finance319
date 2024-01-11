@@ -85,7 +85,7 @@ if __name__ == "__main__": # guard
 - print_shape: prints the shape of the dataframe
 - null_percentage: returns the percentage of null values in a specified column in the dataframe
 ~~~
-    def null_percentage(self, column):
+def null_percentage(self, column):
         null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
         return null_pc
 ~~~
@@ -108,9 +108,34 @@ def get_normal_dist(self, column):
 - These functions are used to convert columns to a more appropriate format to facilitate analysis and visualisation
 - The following functions are created within this class:
 - obj_to_datetime: this function converts obj/str datatype to datetime, a dataframe column is specified to be converted from str to datetime, the specific column and datetime format are arguments of the function. The dataframe is returned.
+~~~
+def obj_to_datetime(self, column_name, datetime_format):
+    
+        self.dataframe[column_name] = pd.to_datetime(self.dataframe[column_name], format = datetime_format) 
+        return self.dataframe 
+~~~
 - obj_to_int: this function converts obj datatype to float, a dataframe column is specified to be converted from obj to float, the text is split to only obtain numerical values, which are then converted to float. Float type is chosen over int as it can accomoate NaN/null values in conversion. The dataframe is returned.
+~~~
+def obj_to_int(self, column_name):
+
+        self.dataframe[column_name] = (self.dataframe[column_name].str.extract('(\d+)'))
+        self.dataframe[column_name] = pd.to_numeric(self.dataframe[column_name])
+        return self.dataframe
+~~~
 - obj_to_str: this function converts obj datatype to string, a dataframe column is specified to be converted from obj to string. The dataframe is returned.
+~~~
+    def obj_to_str(self, column_name):
+
+        self.dataframe[column_name] = (self.dataframe[column_name]).astype('string')
+        return self.dataframe
+~~~
 - obj_to_cat: this function converts obj datatype to categorical, a dataframe column is specified to be converted from obj to categorical. The dataframe is returned.
+~~~
+    def obj_to_cat(self, column_name):
+
+        self.dataframe[column_name] = (self.dataframe[column_name]).astype('category')
+        return self.dataframe
+~~~
 ### Creating the Plotter class and functions
 - The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers 
 - The following functions are created within this class:
