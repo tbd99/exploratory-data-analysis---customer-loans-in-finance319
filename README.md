@@ -371,6 +371,7 @@ print(f"Percentage of the loans recovered against the investor funding and the t
 ***ADD IMAGE*** 
 ![2_bar_chart](/Users/tigerdavies/Test/exploratory-data-analysis---customer-loans-in-finance319/EDA_plots/2_bar_chart.png)
 
+
 - The remaining balance of the loans is calculcated monthly up to 6 months in the future in order to project recovery
 - The monthly installment is subtracted from the remaining balance to calculcate the remaining balance for each month
 - The remaining balance is summed for each month to calculate the percentage recovery as month1_pc, month2_pc etc.
