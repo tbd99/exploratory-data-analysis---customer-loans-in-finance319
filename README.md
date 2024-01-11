@@ -70,11 +70,21 @@ This project will be a practical application and demonstration of the various da
 - plot_corr_matrix: plots a correlation heatmap of the dataframe for columns containing numeric values only 
 - plot_bar_chart: plots a bar chart for a given dataset and specified axes
 - plot_countplot: plots a count plot of the specified column of the dataframe
-
-
-
-
 ### Creating the DataFrameTransform class and functions
+- The DataFrameTransform class is created containing functions for data transformation, this enables data cleaning and transformations
+- The following functions are created within this class:
+- drop_column: drops the specified column from the dataframe
+- drop_null_rows: deletes all rows containing null values in the specified column
+- impute_na_with_mean: replaces null values in a specified column with the mean of the column
+- impute_na_with_mode: replaces null values in a specified column with the mode of the column
+- impute_na_with_median: replaces null values in a specified column with the median of the column
+- log_transform: performs a log transform on the data in the specified column, excluding 0 values
+- sqrt_transform: performs a square root transform on the data in the specified column, excluding negative values
+- cubrt_transform: performs a cube root transform on data in the the specified column
+- box_cox_transform: performs a cube root transform on data in the specified column
+- yeo_johnson_transform: performs a yeo-johnson transformation on data in the specified column
+- remove_top_val: drops the entire dataframe row corresponding to the maximum value for the specified column
+- remove_negatives: drops the entire dataframe row corresponding to negative values in the specified column
 ### Converting columns to the correct format
 ### Handling null values
 ### Identification of skewed columns
