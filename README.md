@@ -26,6 +26,7 @@ This project will be a practical application and demonstration of the various da
 ## Extracting loans data from the cloud
 - The loan payment data to be analysed is stored in an AWS RDS database in the cloud
 - Python classes are created in order to extract this data from the database and save it locally as a pandas DataFrame, enabling analysis
+
 ### Creating the RDSDatabaseConnector class and functions
 - The functions load_yaml and save_to_csv are created for data loading and saving
 - The RDSDatabaseConnector class is created to extract the loans data from an AWS RDS database
@@ -53,6 +54,7 @@ This project will be a practical application and demonstration of the various da
        df = pd.read_sql_table(table_name, engine)
        return df
     ~~~   
+
 ### Loading the data 
 - Credentials are loaded from a yaml file with the defined load_yaml function, database credentials are added to the .gitignore file in order to maintain security
 - An instance of the RDSDatabaseConnector class is intiailised and the SQLAlchemy_initialiser method is called to initialise an engine
@@ -72,6 +74,7 @@ if __name__ == "__main__": # guard
 ## Exploratory data analysis (EDA) and data cleaning 
 - Classes are created to facilitate EDA and data visualisation 
 - Data is then cleaned and transformed after undergoing EDA
+
 ### Creating the DataFrameInfo class and functions
 - The DataFrameInfo class is created containing functions get information and descriptive statistics from the pandas DataFrame being analysed
 - These functions are used to gain insight into the data when performing EDA and enables the identification of outliers, nulls, incorrect data types etc.
@@ -86,23 +89,26 @@ if __name__ == "__main__": # guard
 - null_percentage: returns the percentage of null values in a specified column in the dataframe
 ~~~
 def null_percentage(self, column):
-        null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
-        return null_pc
+
+    null_pc = ((self.dataframe[column].isnull().sum())/len(self.dataframe))*100
+    return null_pc
 ~~~
 - get_range: returns the range of values in a specified column in the dataframe
 ~~~
 def get_range(self, column):
-        range = self.dataframe[column].max() - self.dataframe[column].min()
-        return range
+
+    range = self.dataframe[column].max() - self.dataframe[column].min()
+    return range
 ~~~
 - get_normal_dist: returns the p value of the data in a specified column, giving the normal distribution
 ~~~
 def get_normal_dist(self, column):
         
-        stat, p = normaltest(self.dataframe[column], nan_policy='omit')
-        print('Statistics=%.3f, p=%.3f' % (stat, p))
-        return stat, p
+    stat, p = normaltest(self.dataframe[column], nan_policy='omit')
+    print('Statistics=%.3f, p=%.3f' % (stat, p))
+    return stat, p
 ~~~
+
 ### Creating the DataTransform class and functions
 - The DataTransform class is created containing functions to transform data types in the pandas DataFrame 
 - These functions are used to convert columns to a more appropriate format to facilitate analysis and visualisation
@@ -111,40 +117,60 @@ def get_normal_dist(self, column):
 ~~~
 def obj_to_datetime(self, column_name, datetime_format):
     
-        self.dataframe[column_name] = pd.to_datetime(self.dataframe[column_name], format = datetime_format) 
-        return self.dataframe 
+    self.dataframe[column_name] = pd.to_datetime(self.dataframe[column_name], format = datetime_format) 
+    return self.dataframe 
 ~~~
 - obj_to_int: this function converts obj datatype to float, a dataframe column is specified to be converted from obj to float, the text is split to only obtain numerical values, which are then converted to float. Float type is chosen over int as it can accomoate NaN/null values in conversion. The dataframe is returned.
 ~~~
 def obj_to_int(self, column_name):
 
-        self.dataframe[column_name] = (self.dataframe[column_name].str.extract('(\d+)'))
-        self.dataframe[column_name] = pd.to_numeric(self.dataframe[column_name])
-        return self.dataframe
+    self.dataframe[column_name] = (self.dataframe[column_name].str.extract('(\d+)'))
+    self.dataframe[column_name] = pd.to_numeric(self.dataframe[column_name])
+    return self.dataframe
 ~~~
 - obj_to_str: this function converts obj datatype to string, a dataframe column is specified to be converted from obj to string. The dataframe is returned.
 ~~~
-    def obj_to_str(self, column_name):
+def obj_to_str(self, column_name):
 
-        self.dataframe[column_name] = (self.dataframe[column_name]).astype('string')
-        return self.dataframe
+    self.dataframe[column_name] = (self.dataframe[column_name]).astype('string')
+    return self.dataframe
 ~~~
 - obj_to_cat: this function converts obj datatype to categorical, a dataframe column is specified to be converted from obj to categorical. The dataframe is returned.
 ~~~
-    def obj_to_cat(self, column_name):
+def obj_to_cat(self, column_name):
 
-        self.dataframe[column_name] = (self.dataframe[column_name]).astype('category')
-        return self.dataframe
+    self.dataframe[column_name] = (self.dataframe[column_name]).astype('category')
+    return self.dataframe
 ~~~
+
 ### Creating the Plotter class and functions
 - The Plotter class is created containing functions for data visualisation, this enables the identification of skewed data and outliers 
-- The following functions are created within this class:
+- The following functions are created within this class, with some example code shown below::
 - plot_hist: plots a histogram of the specified column of the dataframe
 - plot_KDE: plots a kernel density estimation (KDE) plot of the specified column of the dataframe
 - plot_box_whiskers: plots a box and whiskers plot of the specified column of the dataframe
 - plot_corr_matrix: plots a correlation heatmap of the dataframe for columns containing numeric values only 
+~~~
+def plot_corr_matrix(self):
+
+    sns.heatmap(self.dataframe.select_dtypes('number').corr(), annot=True, cmap='coolwarm', xticklabels=True, yticklabels=True)
+    plt.show()
+~~~  
 - plot_bar_chart: plots a bar chart for a given dataset and specified axes
+~~~
+def plot_bar_chart(self, my_data, x_axis, y_axis):
+      
+    sns.barplot(data=my_data, y=y_axis, x=x_axis)
+    plt.show()
+~~~
 - plot_countplot: plots a count plot of the specified column of the dataframe
+~~~
+def plot_countplot(self,column):
+
+    sns.countplot(self.dataframe[column]).set(title=column)
+    plt.show()
+~~~
+
 ### Creating the DataFrameTransform class and functions
 - The DataFrameTransform class is created containing functions for data transformation, this enables data cleaning and transformations
 - The following functions are created within this class:
